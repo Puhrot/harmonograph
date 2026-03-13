@@ -396,6 +396,14 @@ hr { border:none; border-top:2px solid var(--black); margin:5px 0; }
       <div class="fit-wrap"><div class="fit-bar" id="fit-bar" style="width:100%"></div></div>
       <div class="fit-label"><span>Max drawing extent</span><span id="fit-pct">100%</span></div>
       <div class="warn-box" id="warn-box">Amplitudes exceed bounds.</div>
+      <div class="ctrl">
+        <div class="ctrl-head"><span class="ctrl-label">Background</span></div>
+        <div style="display:flex;align-items:center;gap:7px;margin-top:3px;">
+          <div id="bg-swatch" style="width:20px;height:20px;border:2px solid #000;cursor:pointer;background:#f5f4f0" onclick="document.getElementById('colBg').click()"></div>
+          <span style="font-family:'Courier New',monospace;font-size:9px;color:var(--mid)" id="bg-hex">#f5f4f0</span>
+          <input type="color" id="colBg" value="#f5f4f0" onchange="onBgChange()">
+        </div>
+      </div>
     </div>
   </div>
 
@@ -428,14 +436,6 @@ hr { border:none; border-top:2px solid var(--black); margin:5px 0; }
   <div class="sec">
     <div class="sec-head l"><span class="sec-title">Global</span></div>
     <div class="sec-body">
-      <div class="ctrl">
-        <div class="ctrl-head"><span class="ctrl-label">Background</span></div>
-        <div style="display:flex;align-items:center;gap:7px;margin-top:3px;">
-          <div id="bg-swatch" style="width:20px;height:20px;border:2px solid #000;cursor:pointer;background:#f5f4f0" onclick="document.getElementById('colBg').click()"></div>
-          <span style="font-family:'Courier New',monospace;font-size:9px;color:var(--mid)" id="bg-hex">#f5f4f0</span>
-          <input type="color" id="colBg" value="#f5f4f0" onchange="onBgChange()">
-        </div>
-      </div>
       <div class="ctrl"><div class="ctrl-head"><span class="ctrl-label">Density</span><span style="display:flex;align-items:baseline;gap:2px;"><input type="number" class="ctrl-val-input" id="v-density" value="50000" min="1000" max="100000" step="1000" style="width:52px;" onchange="setDensity(this.value);document.getElementById('density').value=this.value;"><span class="unit-lbl">lines</span></span></div><input type="range" id="density" min="1000" max="100000" step="1000" value="50000" oninput="setDensity(this.value)"></div>
       <div class="ctrl"><div class="ctrl-head"><span class="ctrl-label">Line weight</span><span style="display:flex;align-items:baseline;gap:2px;"><input type="number" class="ctrl-val-input" id="v-strokeW" value="0.35" min="0.1" max="3" step="0.05" onchange="svInput('strokeW',this.value)"><span class="unit-lbl">mm</span></span></div><input type="range" id="strokeW" min="0.1" max="3" step="0.05" value="0.35" oninput="sv('strokeW')"></div>
       <div class="ctrl"><div class="ctrl-head"><span class="ctrl-label">Opacity</span><input type="number" class="ctrl-val-input" id="v-alpha" value="35" min="3" max="255" step="1" onchange="svInput('alpha',this.value)"></div><input type="range" id="alpha" min="3" max="255" step="1" value="35" oninput="sv('alpha')"></div>
