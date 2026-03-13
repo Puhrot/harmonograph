@@ -2,7 +2,7 @@
 
 A browser-based rotary harmonograph simulator for generative pen plotter art. Configure layered pendulum passes, tune frequencies and phases, then export a ready-to-plot SVG — no build step, no install, no server required.
 
-**[Live demo →](https://nate-northrup.github.io/harmonograph)**
+**[Live demo →](https://puhrot.github.io/harmonograph)**
 
 ---
 
