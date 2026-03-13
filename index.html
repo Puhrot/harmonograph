@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harmonograph — Plotter Art</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black: #0a0a0a;
+  --paper: #e8e2d0;
+  --bg:    #e8e2d0;
+  --yellow:#e8d400;
+  --lime:  #00c8a0;
+  --white: #f2edde;
+  --mid:   #6b6355;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Space Grotesk',sans-serif; background:var(--bg); height:100vh; overflow:hidden; color:var(--black); }
+.app { display:flex; flex-direction:column; height:100vh; }
+
+/* ── TOP HEADER ─────────────────────────────────── */
+.top-header {
+  background:var(--black);
+  border-bottom:3px solid var(--black);
+  padding:0 20px; height:50px;
+  display:flex; align-items:center; gap:18px; flex-shrink:0;
+}
+.top-header h1 {
+  font-size:20px; font-weight:700; letter-spacing:-.02em; line-height:1; white-space:nowrap;
+  color:var(--lime);
+}
+.top-header .sub {
+  font-size:8.5px; line-height:1.4; color:#9ecfbf; max-width:420px;
+  border-left:2px solid rgba(0,200,160,0.35); padding-left:14px;
+}
+.body-row { display:flex; flex:1; overflow:hidden; }
+
+/* ── SIDEBAR ────────────────────────────────────── */
+.sidebar {
+  width:276px; flex-shrink:0;
+  background:var(--paper);
+  padding:7px;
+  overflow-y:auto;
+  overflow-x:hidden;
+  border-right:3px solid var(--black);
+}
+
+/* ── SECTIONS ───────────────────────────────────── */
+.sec { border:2px solid var(--black); margin-bottom:5px; }
+.sec-head {
+  padding:4px 8px;
+  display:flex; align-items:center; justify-content:space-between;
+  border-bottom:2px solid var(--black);
+}
+.sec-head.y  { background:var(--yellow); }
+.sec-head.l  { background:var(--lime); }
+.sec-head.w  { background:var(--white); }
+.sec-title { font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.14em; }
+.sec-body  { padding:7px; }
+
+/* ── CONTROLS ───────────────────────────────────── */
+.ctrl { margin-bottom:5px; }
+.ctrl-head { display:flex; justify-content:space-between; margin-bottom:2px; align-items:baseline; }
+.ctrl-label { font-size:9.5px; font-weight:700; }
+.ctrl-val   { font-family:'Courier New',monospace; font-size:9px; color:var(--mid); }
+.ctrl-val-input {
+  width:44px; text-align:right;
+  font-family:'Courier New',monospace; font-size:9px; color:var(--black);
+  background:transparent; border:none; border-bottom:1px solid transparent;
+  outline:none; padding:0 1px 0 0; cursor:text;
+}
+.ctrl-val-input:hover { border-bottom-color:var(--mid); }
+.ctrl-val-input:focus { border-bottom-color:var(--lime); background:var(--white); }
+.ctrl-val-input::-webkit-inner-spin-button,
+.ctrl-val-input::-webkit-outer-spin-button { -webkit-appearance:none; }
+.ctrl-val-input[type=number] { -moz-appearance:textfield; appearance:textfield; }
+.reset-transform-btn {
+  width:100%; margin-top:4px; padding:3px 0;
+  border:1px solid var(--mid); border-radius:0; cursor:pointer;
+  font-size:8px; font-family:'Space Grotesk',sans-serif; font-weight:700;
+  text-transform:uppercase; letter-spacing:.08em;
+  background:transparent; color:var(--mid); transition:all .1s;
+}
+.reset-transform-btn:hover { border-color:var(--black); color:var(--black); background:rgba(0,0,0,.05); }
+
+/* ── SLIDERS ────────────────────────────────────── */
+input[type=range] {
+  width:100%; height:5px;
+  background:var(--white);
+  border:2px solid var(--black);
+  border-radius:0; outline:none; -webkit-appearance:none; cursor:pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance:none; width:13px; height:13px;
+  background:var(--lime); border:none; border-radius:0; cursor:pointer;
+}
+input[type=range]::-moz-range-thumb {
+  width:13px; height:13px; background:var(--lime); border:none; border-radius:0;
+}
+
+/* ── SELECT ─────────────────────────────────────── */
+select {
+  width:100%; padding:5px 8px;
+  border:2px solid var(--black); border-radius:0;
+  background:var(--white);
+  font-family:'Space Grotesk',sans-serif; font-size:9.5px; font-weight:600;
+  cursor:pointer; margin-bottom:6px; color:var(--black);
+}
+select:focus { outline:none; }
+
+/* ── BUTTONS ────────────────────────────────────── */
+.btn {
+  width:100%; padding:7px; border:2px solid var(--black); border-radius:0;
+  cursor:pointer; font-family:'Space Grotesk',sans-serif;
+  font-size:10.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+  transition:all .1s; margin-bottom:4px;
+}
+.btn-y { background:var(--yellow); color:var(--black); }
+.btn-y:hover { background:#ccbb00; }
+.btn-k { background:var(--black); color:var(--lime); }
+.btn-k:hover { background:#1a1a1a; }
+.btn-w { background:var(--white); color:var(--black); }
+.btn-w:hover { background:#ddd8cb; }
+.btn-sm {
+  padding:3px 8px;
+  border:2px solid var(--black); border-radius:0; cursor:pointer;
+  font-size:9px; font-family:'Space Grotesk',sans-serif; font-weight:700;
+  text-transform:uppercase; letter-spacing:.04em;
+  background:var(--white); color:var(--black); transition:all .1s;
+}
+.btn-sm:hover { background:var(--lime); color:var(--black); }
+
+/* ── TRANSFORM ROW ──────────────────────────────── */
+.ctrl-row-2 { display:grid; grid-template-columns:1fr 1fr; gap:4px; margin-bottom:5px; }
+.ctrl-mini .ctrl-head { margin-bottom:1px; }
+.ctrl-mini .ctrl-label { font-size:8.5px; }
+.ctrl-mini .ctrl-val   { font-size:8px; }
+
+.unit-lbl { font-size:8px; color:var(--mid); font-family:'Space Grotesk',sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:.05em; }
+/* ── PHASES ROW ─────────────────────────────────── */
+.phases-row { display:flex; gap:2px; margin-bottom:5px; }
+.phase-btn {
+  flex:1; padding:3px 1px;
+  border:2px solid var(--black); border-radius:0;
+  cursor:pointer; font-size:8.5px; font-family:'Space Grotesk',sans-serif; font-weight:700;
+  background:var(--white); text-align:center; transition:all .1s; color:var(--black);
+}
+.phase-btn:hover { background:#d8d2c2; }
+.phase-btn.active { background:var(--lime); color:var(--black); }
+
+/* ── RATIO GRID ─────────────────────────────────── */
+.ratio-grid { display:grid; grid-template-columns:repeat(8,1fr); gap:2px; margin-bottom:4px; }
+.ratio-btn {
+  padding:3px 1px;
+  border:2px solid var(--black); border-radius:0;
+  cursor:pointer; font-size:7.5px; font-family:'Space Grotesk',sans-serif; font-weight:700;
+  background:var(--white); text-align:center; transition:all .1s; color:var(--black);
+}
+.ratio-btn:hover { background:#d8d2c2; }
+.ratio-btn.active { background:var(--lime); color:var(--black); }
+
+/* ── ROTOR TABS ─────────────────────────────────── */
+.tab-row { display:flex; gap:2px; margin-bottom:6px; }
+.tab {
+  flex:1; padding:3px 2px;
+  border:2px solid var(--black); border-radius:0; cursor:pointer;
+  font-size:8.5px; font-family:'Space Grotesk',sans-serif; font-weight:700;
+  background:var(--white); text-align:center; text-transform:uppercase; transition:all .1s;
+}
+.tab:hover { background:#d8d2c2; }
+.tab.active { background:var(--black); color:var(--lime); }
+
+/* ── INSTANCE CARDS ─────────────────────────────── */
+.instance-card { border:2px solid var(--black); margin-bottom:6px; overflow:hidden; }
+.instance-head {
+  display:flex; align-items:center; gap:3px; padding:3px 5px;
+  border-bottom:2px solid var(--black); background:var(--white);
+  min-width:0; overflow:hidden;
+}
+.instance-num { font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap; flex-shrink:0; }
+.color-swatch { width:16px; height:16px; border:2px solid var(--black); cursor:pointer; flex-shrink:0; }
+input[type=color] { width:0; height:0; opacity:0; position:absolute; pointer-events:none; }
+.inst-actions { margin-left:auto; display:flex; gap:2px; flex-shrink:0; align-items:center; }
+.inst-rnd {
+  padding:1px 5px;
+  border:2px solid var(--black); border-radius:0;
+  font-size:8px; font-family:'Space Grotesk',sans-serif; font-weight:700;
+  background:var(--white); cursor:pointer; transition:all .1s; flex-shrink:0;
+}
+.inst-rnd:hover { background:var(--lime); color:var(--black); border-color:var(--black); }
+.inst-remove {
+  padding:1px 5px;
+  border:2px solid var(--black); border-radius:0;
+  font-size:8px; font-family:'Space Grotesk',sans-serif; font-weight:700;
+  background:var(--white); cursor:pointer; transition:all .1s;
+}
+.inst-remove:hover { background:#ff2222; color:#fff; border-color:#ff2222; }
+.inst-vis-btn, .inst-solo-btn, .inst-copy-btn {
+  padding:1px 4px;
+  border:2px solid var(--black); border-radius:0;
+  font-size:9px; font-family:'Space Grotesk',sans-serif; font-weight:700;
+  background:var(--white); cursor:pointer; transition:all .1s; flex-shrink:0;
+}
+.inst-vis-btn:hover { background:var(--mid); color:var(--white); }
+.inst-vis-btn.dim { background:var(--mid); color:var(--white); border-color:var(--mid); }
+.inst-solo-btn:hover { background:var(--yellow); }
+.inst-solo-btn.active { background:var(--yellow); color:var(--black); }
+.inst-copy-btn:hover { background:var(--lime); color:var(--black); }
+.drag-handle { cursor:grab; color:var(--mid); font-size:11px; padding:0 1px 0 0; user-select:none; flex-shrink:0; }
+
+/* ── LOCK BUTTONS ────────────────────────────────── */
+.lock-row { display:flex; gap:2px; flex-wrap:nowrap; margin-bottom:5px; align-items:center; overflow:hidden; }
+.lock-lbl { font-size:7px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--mid); margin-right:1px; flex-shrink:0; }
+.lock-btn {
+  padding:1px 4px;
+  border:1px solid var(--mid); border-radius:0;
+  font-size:7px; font-family:'Space Grotesk',sans-serif; font-weight:700;
+  background:var(--white); cursor:pointer; transition:all .1s; color:var(--mid);
+  flex-shrink:0;
+}
+.lock-btn:hover { border-color:var(--black); color:var(--black); }
+.lock-btn.locked { background:var(--yellow); color:var(--black); border-color:var(--black); }
+
+/* ── ASYM DETUNE / DECAY TOGGLE ─────────────────── */
+.asym-btn {
+  padding:2px 6px; margin-bottom:3px;
+  border:1.5px solid var(--mid); border-radius:0;
+  font-size:7.5px; font-family:'Space Grotesk',sans-serif; font-weight:700;
+  background:var(--white); cursor:pointer; color:var(--mid); transition:all .1s;
+}
+.asym-btn:hover { border-color:var(--black); color:var(--black); }
+.asym-btn.on { background:var(--lime); border-color:var(--black); color:var(--black); }
+
+/* ── USER PRESET LIST ───────────────────────────── */
+#user-preset-list { max-height:110px; overflow-y:auto; }
+.user-preset-row {
+  display:flex; align-items:center; gap:3px;
+  padding:2px 4px; margin-bottom:2px;
+  border:1.5px solid transparent;
+  cursor:default;
+}
+.user-preset-row:hover { background:rgba(0,0,0,.04); }
+.user-preset-row.active { border-color:var(--lime); background:rgba(0,200,160,.08); }
+.user-preset-name {
+  flex:1; font-size:9px; font-weight:700; text-transform:uppercase;
+  letter-spacing:.06em; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  color:var(--mid); cursor:pointer;
+}
+.user-preset-row.active .user-preset-name { color:var(--black); }
+.user-preset-del {
+  padding:1px 5px; border:1.5px solid var(--mid); border-radius:0;
+  font-size:8px; font-family:'Space Grotesk',sans-serif; font-weight:700;
+  background:var(--white); cursor:pointer; color:var(--mid); transition:all .1s;
+}
+.user-preset-del:hover { background:#ff2222; border-color:#ff2222; color:#fff; }
+.preset-name-inp {
+  flex:1; padding:4px 6px;
+  border:2px solid var(--black); border-radius:0;
+  background:var(--white); font-family:'Space Grotesk',sans-serif;
+  font-size:9px; font-weight:600; color:var(--black); outline:none;
+}
+.preset-name-inp::placeholder { color:var(--mid); }
+.preset-name-inp:focus { border-color:var(--lime); }
+.instance-card.drag-over { outline:2px dashed var(--lime); }
+.inst-body { padding:6px; }
+
+/* ── SHAPE TOGGLE ───────────────────────────────── */
+.inst-shape-toggle {
+  width:100%; padding:3px 6px; margin-bottom:5px;
+  border:2px solid var(--black); border-radius:0; cursor:pointer;
+  font-size:8.5px; font-family:'Space Grotesk',sans-serif; font-weight:700;
+  text-transform:uppercase; letter-spacing:.06em;
+  background:var(--lime); color:var(--black); text-align:left; transition:all .1s;
+}
+.inst-shape-toggle:hover { background:#00aa88; }
+.inst-shape-body { display:none; }
+.inst-shape-body.open { display:block; }
+
+.add-inst-btn {
+  width:100%; padding:6px; margin-bottom:5px;
+  border:2px dashed var(--black); border-radius:0; cursor:pointer;
+  font-size:9.5px; font-family:'Space Grotesk',sans-serif; font-weight:700;
+  text-transform:uppercase; letter-spacing:.06em;
+  background:transparent; color:var(--mid); transition:all .1s;
+}
+.add-inst-btn:hover { border-style:solid; color:var(--black); background:rgba(0,0,0,.05); }
+
+/* ── PAPER INFO ─────────────────────────────────── */
+.paper-info {
+  border:2px solid var(--black); padding:4px 8px;
+  font-size:9px; color:var(--mid); line-height:1.6; margin-bottom:4px;
+  background:var(--white);
+}
+.paper-info strong { color:var(--black); font-weight:700; }
+.fit-wrap { width:100%; height:4px; background:#c8c2b2; border:1px solid #afa898; margin-bottom:3px; overflow:hidden; }
+.fit-bar  { height:100%; transition:width .2s,background .2s; background:var(--black); }
+.fit-label { font-size:8.5px; color:var(--mid); display:flex; justify-content:space-between; margin-bottom:4px; }
+.warn-box {
+  border:2px solid var(--black); background:var(--yellow);
+  padding:4px 8px; font-size:8.5px; font-weight:700; margin-bottom:5px; display:none;
+}
+.warn-box.on { display:block; }
+
+/* ── PROGRESS ───────────────────────────────────── */
+.progress-wrap {
+  width:100%; background:#c8c2b2; border:2px solid var(--black);
+  height:6px; margin-bottom:6px; display:none;
+}
+.progress-bar { height:100%; background:var(--lime); width:0%; transition:width .08s; }
+
+/* ── SEED ───────────────────────────────────────── */
+.seed-input {
+  flex:1; min-width:0; padding:4px 6px;
+  border:2px solid var(--black); border-radius:0;
+  background:var(--white);
+  font-family:'Courier New',monospace; font-size:12px;
+  text-align:center; color:var(--black);
+}
+.seed-input:focus { outline:none; }
+
+/* ── PRESET GRID ────────────────────────────────── */
+.preset-grid { display:grid; grid-template-columns:1fr 1fr; gap:3px; }
+.preset-btn {
+  padding:5px 3px; border:2px solid var(--black); border-radius:0;
+  cursor:pointer; font-size:8.5px; font-family:'Space Grotesk',sans-serif; font-weight:700;
+  background:var(--white); transition:all .1s;
+  text-align:center; color:var(--black); line-height:1.3; text-transform:uppercase;
+}
+.preset-btn:hover  { background:var(--lime); }
+.preset-btn.active { background:var(--black); color:var(--white); }
+
+/* ── MAIN AREA ──────────────────────────────────── */
+.main {
+  flex:1; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding:18px 22px; gap:10px; overflow:hidden;
+}
+#canvas-wrap {
+  position:relative;
+  flex-shrink:0;
+  /* Width and height are set dynamically by updateCanvasWrapSize() */
+}
+#canvas-container { width:100%; height:100%; }
+#canvas-wrap canvas {
+  width:100% !important; height:100% !important;
+  border-radius:0;
+  box-shadow:5px 5px 0 rgba(10,10,10,.35);
+  display:block;
+}
+#paper-overlay { position:absolute; top:0; left:0; width:100% !important; height:100% !important; pointer-events:none; }
+.canvas-meta {
+  font-size:9px; color:#8a8070; text-align:center; line-height:1.6;
+  font-weight:700; letter-spacing:.07em; text-transform:uppercase;
+  font-family:'Space Grotesk',sans-serif;
+}
+hr { border:none; border-top:2px solid var(--black); margin:5px 0; }
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- TOP HEADER -->
+<div class="top-header">
+  <h1>HARMONOGRAPH</h1>
+  <p class="sub">Rotary drawing machine simulator. Each pen pass is a fully independent harmonograph — unique shape, frequency, and rotor settings. Exports per-layer SVG for pen plotters.</p>
+</div>
+
+<div class="body-row">
+<div class="sidebar">
+
+  <!-- PAPER -->
+  <div class="sec">
+    <div class="sec-head y"><span class="sec-title">Paper &amp; Margin</span></div>
+    <div class="sec-body">
+      <select id="paperSize" onchange="onPaperChange()">
+        <option value="A3L">A3 Landscape (420 × 297 mm)</option>
+        <option value="A3P">A3 Portrait (297 × 420 mm)</option>
+        <option value="A4L">A4 Landscape (297 × 210 mm)</option>
+        <option value="A4P" selected>A4 Portrait (210 × 297 mm)</option>
+        <option value="A5L">A5 Landscape (210 × 148 mm)</option>
+        <option value="A5P">A5 Portrait (148 × 210 mm)</option>
+        <option value="LTL">Letter Landscape (279 × 216 mm)</option>
+        <option value="LTP">Letter Portrait (216 × 279 mm)</option>
+        <option value="SQS">Square 200 × 200 mm</option>
+        <option value="SQL">Square 300 × 300 mm</option>
+      </select>
+      <div class="ctrl">
+        <div class="ctrl-head"><span class="ctrl-label">Margin</span><span class="ctrl-val"><span id="v-margin">15</span> mm</span></div>
+        <input type="range" id="margin" min="0" max="60" step="1" value="15" oninput="onMarginChange()">
+      </div>
+      <div class="paper-info">
+        <strong id="paper-name">A4 Portrait</strong> &nbsp; Drawable: <span id="paper-dw">180</span>×<span id="paper-dh">267</span> mm
+      </div>
+      <div class="fit-wrap"><div class="fit-bar" id="fit-bar" style="width:100%"></div></div>
+      <div class="fit-label"><span>Max drawing extent</span><span id="fit-pct">100%</span></div>
+      <div class="warn-box" id="warn-box">Amplitudes exceed bounds.</div>
+    </div>
+  </div>
+
+  <!-- SEED -->
+  <div class="sec">
+    <div class="sec-head l"><span class="sec-title">Seed</span></div>
+    <div class="sec-body">
+      <div style="display:flex;gap:4px;align-items:center;">
+        <button class="btn-sm" onclick="stepSeed(-1)">←</button>
+        <input type="number" id="seed-input" class="seed-input" value="1">
+        <button class="btn-sm" onclick="stepSeed(1)">→</button>
+        <button class="btn-sm" onclick="rndSeed()">⟳</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PEN PASSES -->
+  <div class="sec">
+    <div class="sec-head y">
+      <span class="sec-title">Pen Passes</span>
+      <span style="font-size:8px;font-weight:500;opacity:.7">independent shapes</span>
+    </div>
+    <div class="sec-body">
+      <div id="instances-list"></div>
+      <button class="add-inst-btn" onclick="addInstance()">+ Add pen pass</button>
+    </div>
+  </div>
+
+  <!-- GLOBAL -->
+  <div class="sec">
+    <div class="sec-head l"><span class="sec-title">Global</span></div>
+    <div class="sec-body">
+      <div class="ctrl">
+        <div class="ctrl-head"><span class="ctrl-label">Background</span></div>
+        <div style="display:flex;align-items:center;gap:7px;margin-top:3px;">
+          <div id="bg-swatch" style="width:20px;height:20px;border:2px solid #000;cursor:pointer;background:#f5f4f0" onclick="document.getElementById('colBg').click()"></div>
+          <span style="font-family:'Courier New',monospace;font-size:9px;color:var(--mid)" id="bg-hex">#f5f4f0</span>
+          <input type="color" id="colBg" value="#f5f4f0" onchange="onBgChange()">
+        </div>
+      </div>
+      <div class="ctrl"><div class="ctrl-head"><span class="ctrl-label">Density</span><span style="display:flex;align-items:baseline;gap:2px;"><input type="number" class="ctrl-val-input" id="v-density" value="50000" min="1000" max="100000" step="1000" style="width:52px;" onchange="setDensity(this.value);document.getElementById('density').value=this.value;"><span class="unit-lbl">lines</span></span></div><input type="range" id="density" min="1000" max="100000" step="1000" value="50000" oninput="setDensity(this.value)"></div>
+      <div class="ctrl"><div class="ctrl-head"><span class="ctrl-label">Line weight</span><span style="display:flex;align-items:baseline;gap:2px;"><input type="number" class="ctrl-val-input" id="v-strokeW" value="0.35" min="0.1" max="3" step="0.05" onchange="svInput('strokeW',this.value)"><span class="unit-lbl">mm</span></span></div><input type="range" id="strokeW" min="0.1" max="3" step="0.05" value="0.35" oninput="sv('strokeW')"></div>
+      <div class="ctrl"><div class="ctrl-head"><span class="ctrl-label">Opacity</span><input type="number" class="ctrl-val-input" id="v-alpha" value="35" min="3" max="255" step="1" onchange="svInput('alpha',this.value)"></div><input type="range" id="alpha" min="3" max="255" step="1" value="35" oninput="sv('alpha')"></div>
+    </div>
+  </div>
+
+  <!-- PRESETS -->
+  <div class="sec">
+    <div class="sec-head w"><span class="sec-title">Presets</span></div>
+    <div class="sec-body">
+      <div class="preset-grid">
+        <button class="preset-btn active" id="preset-lobed"    onclick="applyPreset('lobed')">Lobed<br><span style="font-weight:400;font-size:7.5px">2:3 × 1:1</span></button>
+        <button class="preset-btn"        id="preset-trefoil"  onclick="applyPreset('trefoil')">Trefoil<br><span style="font-weight:400;font-size:7.5px">2:3 × 3:2</span></button>
+        <button class="preset-btn"        id="preset-rose"     onclick="applyPreset('rose')">Rose<br><span style="font-weight:400;font-size:7.5px">1:2 × 1:1</span></button>
+        <button class="preset-btn"        id="preset-mandala"  onclick="applyPreset('mandala')">Mandala<br><span style="font-weight:400;font-size:7.5px">3:4 × 2:3</span></button>
+        <button class="preset-btn"        id="preset-torus"    onclick="applyPreset('torus')">Torus<br><span style="font-weight:400;font-size:7.5px">1:1 detuned</span></button>
+        <button class="preset-btn"        id="preset-shell"    onclick="applyPreset('shell')">Shell<br><span style="font-weight:400;font-size:7.5px">4:3 × 1:1</span></button>
+        <button class="preset-btn"        id="preset-knot"     onclick="applyPreset('knot')">Knot<br><span style="font-weight:400;font-size:7.5px">1:2 woven</span></button>
+        <button class="preset-btn"        id="preset-duo"      onclick="applyPreset('duo')">Duo<br><span style="font-weight:400;font-size:7.5px">2 shapes</span></button>
+        <button class="preset-btn"        id="preset-bubbles"  onclick="applyPreset('bubbles')">Bubbles<br><span style="font-weight:400;font-size:7.5px">3 blobs</span></button>
+        <button class="preset-btn"        id="preset-clover"   onclick="applyPreset('clover')">Clover<br><span style="font-weight:400;font-size:7.5px">4-fold</span></button>
+        <button class="preset-btn"        id="preset-spectrum" onclick="applyPreset('spectrum')">Spectrum<br><span style="font-weight:400;font-size:7.5px">rainbow ring</span></button>
+        <button class="preset-btn"        id="preset-vessel"   onclick="applyPreset('vessel')">Vessel<br><span style="font-weight:400;font-size:7.5px">3D form</span></button>
+        <button class="preset-btn"        id="preset-nebula"   onclick="applyPreset('nebula')">Nebula<br><span style="font-weight:400;font-size:7.5px">multi-ratio</span></button>
+        <button class="preset-btn"        id="preset-star"     onclick="applyPreset('star')">Star<br><span style="font-weight:400;font-size:7.5px">warm→cool</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- USER PRESETS -->
+  <div class="sec">
+    <div class="sec-head w"><span class="sec-title">User Presets</span></div>
+    <div class="sec-body">
+      <div style="display:flex;gap:4px;margin-bottom:5px;">
+        <input type="text" id="preset-name-input" class="preset-name-inp" placeholder="Name your preset…">
+        <button class="btn-sm" onclick="saveUserPreset()">Save</button>
+      </div>
+      <div id="user-preset-list"></div>
+      <div style="display:flex;gap:3px;margin-top:4px;">
+        <button class="btn-sm" style="flex:1" onclick="exportPresetJSON()">↓ Export JSON</button>
+        <label class="btn-sm" style="flex:1;text-align:center;cursor:pointer;padding:3px 8px;">↑ Import JSON<input type="file" accept=".json" style="display:none" onchange="importPresetJSON(this)"></label>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+  <div class="progress-wrap" id="progress-wrap"><div class="progress-bar" id="progress-bar"></div></div>
+  <div style="display:flex;gap:4px;margin-bottom:4px;">
+    <button class="btn btn-w" style="flex:1;margin-bottom:0" onclick="undo()" id="btn-undo">← Undo</button>
+    <button class="btn btn-w" style="flex:1;margin-bottom:0" onclick="redo()" id="btn-redo">Redo →</button>
+  </div>
+  <button class="btn btn-w" onclick="randomizeAll()">⚄ Randomise All</button>
+  <button class="btn btn-k" onclick="redraw()">↻ Redraw</button>
+  <button class="btn btn-y" id="btn-export" onclick="exportSVG()">↓ Export SVG for Plotter</button>
+  <button class="btn btn-w" onclick="resetDefaults()">Reset Defaults</button>
+
+</div><!-- end sidebar -->
+
+<!-- MAIN -->
+<div class="main">
+  <div id="canvas-wrap">
+    <div id="canvas-container"></div>
+    <canvas id="paper-overlay" width="700" height="700"></canvas>
+  </div>
+  <div class="canvas-meta" id="canvas-meta">A4 Portrait · seed:1 · rotary</div>
+</div>
+</div><!-- end .body-row -->
+</div><!-- end .app -->
+
+<script>
+// ─── PAPER ───────────────────────────────────────────────
+const PAPERS={
+  A3L:{name:'A3 Landscape',w:420,h:297}, A3P:{name:'A3 Portrait',w:297,h:420},
+  A4L:{name:'A4 Landscape',w:297,h:210}, A4P:{name:'A4 Portrait',w:210,h:297},
+  A5L:{name:'A5 Landscape',w:210,h:148}, A5P:{name:'A5 Portrait',w:148,h:210},
+  LTL:{name:'Letter Landscape',w:279,h:216}, LTP:{name:'Letter Portrait',w:216,h:279},
+  SQS:{name:'Square 200',w:200,h:200}, SQL:{name:'Square 300',w:300,h:300}
+};
+let paper=PAPERS['A4P'], marginMm=15;
+const dw=()=>paper.w-marginMm*2;
+const dh=()=>paper.h-marginMm*2;
+const ampUnit=()=>Math.min(dw(),dh())/2;
+const computeScale=()=>{
+  const pxPerMm=MAXCS/Math.max(paper.w,paper.h)*0.9;
+  return (Math.min(dw(),dh())/2)*pxPerMm;
+};
+
+// ─── RATIOS ──────────────────────────────────────────────
+const RATIOS=[
+  {label:'1:1',f1:1,f2:1}, {label:'1:2',f1:1,f2:2}, {label:'2:1',f1:2,f2:1}, {label:'2:3',f1:2,f2:3},
+  {label:'3:2',f1:3,f2:2}, {label:'3:4',f1:3,f2:4}, {label:'4:3',f1:4,f2:3}, {label:'1:3',f1:1,f2:3},
+];
+
+// ─── PER-INSTANCE DEFAULTS ────────────────────────────────
+// Every pen pass is a fully independent harmonograph with its own
+// frequency ratios, amplitudes, phases, and detune.
+const DEF_INST=()=>({
+  color:'#333333', phaseOffset:0,
+  ratioX:3, ratioY:0,
+  A1:0.65, p1:0, A2:0.35, p2:0,
+  A3:0.65, p3:1.57, A4:0.35, p4:0.79,
+  detune:0.010, detuneY:null, phases:1,
+  offsetX:0, offsetY:0, scale:1.0, rotation:0,
+  decayX:0, decayY:0,
+  visible:true,
+  locks:{color:false, ratioX:false, ratioY:false, detune:false, phaseOffset:false, amp:false},
+  transformOpen:false, phasesOpen:false, shapeOpen:false, rotorTab:'p1'
+});
+
+let instances=[
+  {...DEF_INST(), color:'#3355bb', phaseOffset:0},
+  {...DEF_INST(), color:'#bb3355', phaseOffset:0.3}
+];
+
+const DEF_COLORS=['#3355bb','#bb3355','#22aa55','#cc7700','#884499','#cc2233'];
+
+// ─── GLOBAL PARAMS ────────────────────────────────────────
+// Only rendering-level params are global; shape params live per-instance.
+let P={seed:1, steps:50000, dt:0.04, strokeW:0.35, alpha:35, colBg:'#f5f4f0'};
+
+// ─── PRESETS ─────────────────────────────────────────────
+const PRESETS={
+  lobed:{steps:50000,dt:0.04,strokeW:0.35,alpha:35,instances:[
+    {color:'#3355bb',phaseOffset:0,  ratioX:3,ratioY:0,A1:0.65,p1:0,A2:0.35,p2:0,   A3:0.65,p3:1.57,A4:0.35,p4:0.79,detune:0.010},
+    {color:'#bb3355',phaseOffset:0.3,ratioX:3,ratioY:0,A1:0.65,p1:0,A2:0.35,p2:0,   A3:0.65,p3:1.57,A4:0.35,p4:0.79,detune:0.010}
+  ]},
+  trefoil:{steps:50000,dt:0.04,strokeW:0.4,alpha:38,instances:[
+    {color:'#2244aa',phaseOffset:0,  ratioX:3,ratioY:4,A1:0.68,p1:0,A2:0.32,p2:0.3, A3:0.68,p3:1.57,A4:0.32,p4:0.9, detune:0.006},
+    {color:'#aa2244',phaseOffset:0.5,ratioX:3,ratioY:4,A1:0.68,p1:0,A2:0.32,p2:0.3, A3:0.68,p3:1.57,A4:0.32,p4:0.9, detune:0.006}
+  ]},
+  rose:{steps:50000,dt:0.05,strokeW:0.4,alpha:38,instances:[
+    {color:'#cc3366',phaseOffset:0,   ratioX:1,ratioY:0,A1:0.80,p1:0,A2:0.20,p2:0,  A3:0.80,p3:1.57,A4:0.20,p4:0,   detune:0.005},
+    {color:'#883300',phaseOffset:0.55,ratioX:1,ratioY:0,A1:0.80,p1:0,A2:0.20,p2:0,  A3:0.80,p3:1.57,A4:0.20,p4:0,   detune:0.005}
+  ]},
+  mandala:{steps:50000,dt:0.025,strokeW:0.22,alpha:22,instances:[
+    {color:'#cc2244',phaseOffset:0,   ratioX:5,ratioY:3,A1:0.65,p1:0,A2:0.35,p2:0.5,A3:0.65,p3:1.57,A4:0.35,p4:1.0, detune:0.008},
+    {color:'#4455cc',phaseOffset:0.42,ratioX:5,ratioY:3,A1:0.65,p1:0,A2:0.35,p2:0.5,A3:0.65,p3:1.57,A4:0.35,p4:1.0, detune:0.008},
+    {color:'#228844',phaseOffset:0.84,ratioX:5,ratioY:3,A1:0.65,p1:0,A2:0.35,p2:0.5,A3:0.65,p3:1.57,A4:0.35,p4:1.0, detune:0.008}
+  ]},
+  torus:{steps:50000,dt:0.03,strokeW:0.28,alpha:20,instances:[
+    {color:'#00ccbb',phaseOffset:0,   ratioX:0,ratioY:0,A1:0.70,p1:0,A2:0.30,p2:0,  A3:0.70,p3:1.57,A4:0.30,p4:0,   detune:0.0125},
+    {color:'#cc4400',phaseOffset:3.14,ratioX:0,ratioY:0,A1:0.70,p1:0,A2:0.30,p2:0,  A3:0.70,p3:1.57,A4:0.30,p4:0,   detune:0.0125}
+  ]},
+  shell:{steps:50000,dt:0.035,strokeW:0.32,alpha:32,instances:[
+    {color:'#aa4400',phaseOffset:0,   ratioX:6,ratioY:0,A1:0.72,p1:0,A2:0.28,p2:0.4,A3:0.72,p3:1.57,A4:0.28,p4:1.1, detune:0.009},
+    {color:'#4488cc',phaseOffset:0.35,ratioX:6,ratioY:0,A1:0.72,p1:0,A2:0.28,p2:0.4,A3:0.72,p3:1.57,A4:0.28,p4:1.1, detune:0.009}
+  ]},
+  // Woven trefoil torus knot — 1:2 on both axes, Y phase-shifted 90°
+  // x = A1·cos(t)+A2·cos(2t)  y = A1·sin(t)−A2·sin(2t)
+  knot:{steps:50000,dt:0.018,strokeW:0.14,alpha:8,instances:[
+    {color:'#990000',phaseOffset:0,   ratioX:1,ratioY:1,A1:0.33,p1:0,A2:0.67,p2:0,  A3:0.33,p3:4.71,A4:0.67,p4:1.57,detune:0.0125},
+    {color:'#002288',phaseOffset:1.57,ratioX:1,ratioY:1,A1:0.33,p1:0,A2:0.67,p2:0,  A3:0.33,p3:4.71,A4:0.67,p4:1.57,detune:0.0125},
+    {color:'#007777',phaseOffset:3.14,ratioX:1,ratioY:1,A1:0.33,p1:0,A2:0.67,p2:0,  A3:0.33,p3:4.71,A4:0.67,p4:1.57,detune:0.0125},
+    {color:'#886600',phaseOffset:4.71,ratioX:1,ratioY:1,A1:0.33,p1:0,A2:0.67,p2:0,  A3:0.33,p3:4.71,A4:0.67,p4:1.57,detune:0.0125}
+  ]},
+  // Bubbles — 3 organic blob shapes, each using different ratios, dark background
+  bubbles:{steps:50000,dt:0.04,strokeW:0.25,alpha:22,colBg:'#1e1c1a',instances:[
+    {color:'#d06878',phaseOffset:0,   ratioX:3,ratioY:0,A1:0.72,p1:0,   A2:0.28,p2:0.5,A3:0.65,p3:1.57,A4:0.35,p4:0.5, detune:0.007,phases:1,offsetX:0,offsetY:0,scale:1},
+    {color:'#60c4b8',phaseOffset:1.8, ratioX:4,ratioY:3,A1:0.68,p1:0.4, A2:0.32,p2:1.2,A3:0.70,p3:1.2, A4:0.30,p4:0.8, detune:0.009,phases:1,offsetX:0,offsetY:0,scale:1},
+    {color:'#88aa44',phaseOffset:4.0, ratioX:0,ratioY:3,A1:0.65,p1:0.8, A2:0.35,p2:0.8,A3:0.68,p3:1.0, A4:0.32,p4:1.6, detune:0.008,phases:1,offsetX:0,offsetY:0,scale:1}
+  ]},
+  // Clover — 4-fold rotational symmetry, dense black single pass
+  clover:{steps:50000,dt:0.03,strokeW:0.15,alpha:50,instances:[
+    {color:'#111111',phaseOffset:0,ratioX:0,ratioY:0,A1:0.68,p1:0,A2:0.32,p2:0,A3:0.68,p3:1.57,A4:0.32,p4:0,detune:0.010,phases:4,offsetX:0,offsetY:0,scale:1}
+  ]},
+  // Spectrum — 8-pass rainbow torus ring, 1:1 detuned
+  spectrum:{steps:50000,dt:0.03,strokeW:0.16,alpha:28,instances:[
+    {color:'#ff2222',phaseOffset:0,   ratioX:0,ratioY:0,A1:0.70,p1:0,A2:0.30,p2:0,A3:0.70,p3:1.57,A4:0.30,p4:0,detune:0.008,phases:1,offsetX:0,offsetY:0,scale:1},
+    {color:'#ff8800',phaseOffset:0.78,ratioX:0,ratioY:0,A1:0.70,p1:0,A2:0.30,p2:0,A3:0.70,p3:1.57,A4:0.30,p4:0,detune:0.008,phases:1,offsetX:0,offsetY:0,scale:1},
+    {color:'#cccc00',phaseOffset:1.57,ratioX:0,ratioY:0,A1:0.70,p1:0,A2:0.30,p2:0,A3:0.70,p3:1.57,A4:0.30,p4:0,detune:0.008,phases:1,offsetX:0,offsetY:0,scale:1},
+    {color:'#44bb00',phaseOffset:2.36,ratioX:0,ratioY:0,A1:0.70,p1:0,A2:0.30,p2:0,A3:0.70,p3:1.57,A4:0.30,p4:0,detune:0.008,phases:1,offsetX:0,offsetY:0,scale:1},
+    {color:'#00aaaa',phaseOffset:3.14,ratioX:0,ratioY:0,A1:0.70,p1:0,A2:0.30,p2:0,A3:0.70,p3:1.57,A4:0.30,p4:0,detune:0.008,phases:1,offsetX:0,offsetY:0,scale:1},
+    {color:'#2244dd',phaseOffset:3.93,ratioX:0,ratioY:0,A1:0.70,p1:0,A2:0.30,p2:0,A3:0.70,p3:1.57,A4:0.30,p4:0,detune:0.008,phases:1,offsetX:0,offsetY:0,scale:1},
+    {color:'#8822cc',phaseOffset:4.71,ratioX:0,ratioY:0,A1:0.70,p1:0,A2:0.30,p2:0,A3:0.70,p3:1.57,A4:0.30,p4:0,detune:0.008,phases:1,offsetX:0,offsetY:0,scale:1},
+    {color:'#cc1188',phaseOffset:5.50,ratioX:0,ratioY:0,A1:0.70,p1:0,A2:0.30,p2:0,A3:0.70,p3:1.57,A4:0.30,p4:0,detune:0.008,phases:1,offsetX:0,offsetY:0,scale:1}
+  ]},
+  // Vessel — 6 rainbow passes of asymmetric 1:2 shape, rotated through 2π → 3D vase form
+  vessel:{steps:50000,dt:0.035,strokeW:0.18,alpha:20,instances:[
+    {color:'#cc2222',phaseOffset:0,   ratioX:1,ratioY:0,A1:0.75,p1:0,A2:0.25,p2:1.05,A3:0.70,p3:1.57,A4:0.30,p4:0.5,detune:0.005,phases:1,offsetX:0,offsetY:0,scale:1},
+    {color:'#cc7700',phaseOffset:1.05,ratioX:1,ratioY:0,A1:0.75,p1:0,A2:0.25,p2:1.05,A3:0.70,p3:1.57,A4:0.30,p4:0.5,detune:0.005,phases:1,offsetX:0,offsetY:0,scale:1},
+    {color:'#aaaa00',phaseOffset:2.09,ratioX:1,ratioY:0,A1:0.75,p1:0,A2:0.25,p2:1.05,A3:0.70,p3:1.57,A4:0.30,p4:0.5,detune:0.005,phases:1,offsetX:0,offsetY:0,scale:1},
+    {color:'#229922',phaseOffset:3.14,ratioX:1,ratioY:0,A1:0.75,p1:0,A2:0.25,p2:1.05,A3:0.70,p3:1.57,A4:0.30,p4:0.5,detune:0.005,phases:1,offsetX:0,offsetY:0,scale:1},
+    {color:'#2266cc',phaseOffset:4.19,ratioX:1,ratioY:0,A1:0.75,p1:0,A2:0.25,p2:1.05,A3:0.70,p3:1.57,A4:0.30,p4:0.5,detune:0.005,phases:1,offsetX:0,offsetY:0,scale:1},
+    {color:'#7722aa',phaseOffset:5.24,ratioX:1,ratioY:0,A1:0.75,p1:0,A2:0.25,p2:1.05,A3:0.70,p3:1.57,A4:0.30,p4:0.5,detune:0.005,phases:1,offsetX:0,offsetY:0,scale:1}
+  ]},
+  // Nebula — 6 passes with varied ratios and shifting phases, complex overlapping
+  nebula:{steps:50000,dt:0.028,strokeW:0.14,alpha:18,instances:[
+    {color:'#cc2255',phaseOffset:0,   ratioX:5,ratioY:3,A1:0.65,p1:0,   A2:0.35,p2:0.5,A3:0.65,p3:1.57,A4:0.35,p4:1.0,detune:0.007,phases:1,offsetX:0,offsetY:0,scale:1},
+    {color:'#cc7700',phaseOffset:0.52,ratioX:3,ratioY:5,A1:0.65,p1:0.5, A2:0.35,p2:1.0,A3:0.65,p3:2.07,A4:0.35,p4:1.5,detune:0.008,phases:1,offsetX:0,offsetY:0,scale:1},
+    {color:'#22aa44',phaseOffset:1.05,ratioX:6,ratioY:4,A1:0.65,p1:1.0, A2:0.35,p2:1.5,A3:0.65,p3:2.57,A4:0.35,p4:2.0,detune:0.006,phases:1,offsetX:0,offsetY:0,scale:1},
+    {color:'#2244cc',phaseOffset:1.57,ratioX:4,ratioY:6,A1:0.65,p1:1.5, A2:0.35,p2:2.0,A3:0.65,p3:3.07,A4:0.35,p4:2.5,detune:0.009,phases:1,offsetX:0,offsetY:0,scale:1},
+    {color:'#8822bb',phaseOffset:2.09,ratioX:5,ratioY:6,A1:0.65,p1:2.0, A2:0.35,p2:2.5,A3:0.65,p3:3.57,A4:0.35,p4:3.0,detune:0.005,phases:1,offsetX:0,offsetY:0,scale:1},
+    {color:'#2288aa',phaseOffset:2.62,ratioX:6,ratioY:3,A1:0.65,p1:2.5, A2:0.35,p2:3.0,A3:0.65,p3:4.07,A4:0.35,p4:3.5,detune:0.010,phases:1,offsetX:0,offsetY:0,scale:1}
+  ]},
+  // Star — warm center radiating to cool outer ring, uses scale per pass
+  star:{steps:50000,dt:0.025,strokeW:0.13,alpha:20,instances:[
+    {color:'#ff4400',phaseOffset:0,   ratioX:5,ratioY:5,A1:0.65,p1:0,A2:0.35,p2:0,A3:0.65,p3:1.57,A4:0.35,p4:0,detune:0.004,phases:5,offsetX:0,offsetY:0,scale:0.40},
+    {color:'#ff8800',phaseOffset:0.5, ratioX:5,ratioY:5,A1:0.65,p1:0,A2:0.35,p2:0,A3:0.65,p3:1.57,A4:0.35,p4:0,detune:0.006,phases:5,offsetX:0,offsetY:0,scale:0.58},
+    {color:'#ddbb00',phaseOffset:1.0, ratioX:5,ratioY:5,A1:0.65,p1:0,A2:0.35,p2:0,A3:0.65,p3:1.57,A4:0.35,p4:0,detune:0.008,phases:3,offsetX:0,offsetY:0,scale:0.76},
+    {color:'#44aa22',phaseOffset:1.5, ratioX:5,ratioY:5,A1:0.65,p1:0,A2:0.35,p2:0,A3:0.65,p3:1.57,A4:0.35,p4:0,detune:0.010,phases:1,offsetX:0,offsetY:0,scale:0.90},
+    {color:'#009988',phaseOffset:2.0, ratioX:0,ratioY:0,A1:0.70,p1:0,A2:0.30,p2:0,A3:0.70,p3:1.57,A4:0.30,p4:0,detune:0.010,phases:1,offsetX:0,offsetY:0,scale:1.0}
+  ]},
+  // Duo — two completely different independent shapes layered
+  // Pass 1: simple filled oval (1:1 detuned), gold
+  // Pass 2: complex lobed trefoil (2:3 × 3:2), magenta
+  duo:{steps:50000,dt:0.028,strokeW:0.22,alpha:22,instances:[
+    {color:'#cc8800',phaseOffset:0,   ratioX:0,ratioY:0,A1:0.78,p1:0,A2:0.22,p2:0,  A3:0.78,p3:1.57,A4:0.22,p4:0,   detune:0.0125},
+    {color:'#cc0060',phaseOffset:1.0, ratioX:3,ratioY:4,A1:0.68,p1:0,A2:0.32,p2:0.5,A3:0.68,p3:1.57,A4:0.32,p4:1.2, detune:0.007}
+  ]},
+};
+
+const MAXCS=700;
+// Canvas dimensions track the paper aspect ratio; larger dim is always MAXCS
+const csW=()=>paper.h>=paper.w ? Math.round(MAXCS*paper.w/paper.h) : MAXCS;
+const csH=()=>paper.w>=paper.h ? Math.round(MAXCS*paper.h/paper.w) : MAXCS;
+let myp5, allPts=[], allColors=[], renderToken=0;
+let soloIdx=-1;
+let undoHistory=[], undoPos=-1;
+const MAX_UNDO=40;
+
+// ─── PAPER UI ────────────────────────────────────────────
+function updateCanvasWrapSize(){
+  const main=document.querySelector('.main');
+  if(!main)return;
+  const wrap=document.getElementById('canvas-wrap');
+  if(!wrap)return;
+  const avW=main.clientWidth-44;   // 22px padding each side
+  const avH=main.clientHeight-56;  // 18px top+bottom padding + 10px gap + ~10px meta
+  const natW=csW(), natH=csH();
+  const scale=Math.min(avW/natW, avH/natH, 1); // never upscale beyond natural size
+  wrap.style.width=Math.round(natW*scale)+'px';
+  wrap.style.height=Math.round(natH*scale)+'px';
+}
+
+function onPaperChange(){
+  paper=PAPERS[document.getElementById('paperSize').value];
+  document.getElementById('paper-name').textContent=paper.name;
+  const maxMargin=Math.floor(Math.min(paper.w,paper.h)/2)-5;
+  if(marginMm>maxMargin){
+    marginMm=maxMargin;
+    document.getElementById('margin').value=marginMm;
+    document.getElementById('v-margin').textContent=marginMm;
+  }
+  if(myp5) myp5.resizeCanvas(csW(),csH());
+  updatePaperUI();redraw();
+}
+function onMarginChange(){marginMm=parseInt(document.getElementById('margin').value);document.getElementById('v-margin').textContent=marginMm;updatePaperUI();redraw();}
+function updatePaperUI(){document.getElementById('paper-dw').textContent=dw().toFixed(0);document.getElementById('paper-dh').textContent=dh().toFixed(0);updateCanvasWrapSize();updateFit();updateOverlay();}
+
+function updateFit(){
+  let maxExt=0;
+  instances.forEach(inst=>{
+    const s=inst.scale||1;
+    const mx=(inst.A1+inst.A2)*s, my=(inst.A3+inst.A4)*s;
+    maxExt=Math.max(maxExt,mx,my);
+  });
+  const bar=document.getElementById('fit-bar');
+  const lbl=document.getElementById('fit-pct');
+  const warn=document.getElementById('warn-box');
+  lbl.textContent=Math.round(maxExt*100)+'%';
+  bar.style.width=Math.min(100,Math.round(maxExt*100))+'%';
+  if(maxExt>1){bar.style.background='#ff3333';warn.classList.add('on');}
+  else{bar.style.background='var(--black)';warn.classList.remove('on');}
+}
+
+function updateOverlay(){
+  const ov=document.getElementById('paper-overlay');
+  if(!document.querySelector('#canvas-container canvas'))return;
+  // Use logical canvas size — canvas IS the paper, so no centering offset needed.
+  const w=csW(), h=csH();
+  ov.width=w; ov.height=h;
+  ov.style.width=w+'px'; ov.style.height=h+'px';
+  const ctx=ov.getContext('2d');
+  ctx.clearRect(0,0,w,h);
+  // Physical px/mm (no 0.9 fudge — margin guide should reflect real paper measurements)
+  const pxMm=MAXCS/Math.max(paper.w,paper.h);
+  const mp=marginMm*pxMm;
+  // Paper edge (canvas boundary)
+  ctx.strokeStyle='rgba(100,100,100,0.18)'; ctx.lineWidth=1; ctx.setLineDash([]);
+  ctx.strokeRect(0.5,0.5,w-1,h-1);
+  // Margin guide
+  ctx.strokeStyle='rgba(0,0,0,0.28)'; ctx.setLineDash([4,4]);
+  ctx.strokeRect(mp,mp,w-mp*2,h-mp*2);
+  ctx.setLineDash([]);
+}
+
+// ─── INSTANCES UI ────────────────────────────────────────
+// Build the lock-row HTML using safe string concatenation (avoids nested
+// template-literal parsing issues in some browsers / Firefox).
+function setDensity(v){
+  v=Math.round(parseInt(v)/1000)*1000;
+  P.steps=v; P.dt=0.04;
+  const el=document.getElementById('v-density');
+  if(el) el.value=v;
+  const sl=document.getElementById('density');
+  if(sl) sl.value=v;
+  redraw();
+}
+function buildRemoveBtn(i){
+  if(instances.length<=1) return '';
+  return '<button class="inst-remove" onclick="removeInstance('+i+')">×</button>';
+}
+function buildPhasesRow(inst,i){
+  var ns=[1,2,3,4,6,8];
+  var html='';
+  for(var ni=0;ni<ns.length;ni++){
+    var n=ns[ni];
+    var cls='phase-btn'+((inst.phases||1)===n?' active':'');
+    html+='<button class="'+cls+'" onclick="setInstPhases('+i+','+n+')">'+n+'</button>';
+  }
+  return html;
+}
+function buildLockRow(inst, i){
+  var keys   = ['color','ratioX','ratioY','amp','phaseOffset','detune'];
+  var labels = ['Col',  'RX',    'RY',    'Amp','Ph',         'Det'   ];
+  var html   = '<div class="lock-row"><span class="lock-lbl">Lock:</span>';
+  for(var ki=0;ki<keys.length;ki++){
+    var k   = keys[ki];
+    var lbl = labels[ki];
+    var cls = 'lock-btn' + ((inst.locks && inst.locks[k]) ? ' locked' : '');
+    html += '<button class="' + cls + '" onclick="toggleLock(' + i + ',\'' + k + '\')" title="Lock ' + k + ' from randomisation">' + lbl + '</button>';
+  }
+  html += '</div>';
+  return html;
+}
+
+function buildInstancesUI(){
+  const list=document.getElementById('instances-list');
+  list.innerHTML='';
+  instances.forEach((inst,i)=>{
+    const isOpen=inst.shapeOpen;
+    const arw=isOpen?'▾':'▸';
+    const card=document.createElement('div');
+    card.className='instance-card';
+    card.draggable=true;
+    card.draggable=true;
+    card.dataset.idx=i;
+    card.innerHTML=`
+      <div class="instance-head">
+        <span class="drag-handle" title="Drag to reorder">⠿</span>
+        <span class="instance-num">Pass ${i+1}</span>
+        <div class="color-swatch" id="sw-${i}" style="background:${inst.color}" onclick="document.getElementById('ci-${i}').click()"></div>
+        <input type="color" id="ci-${i}" value="${inst.color}" onchange="setInstColor(${i},this.value)">
+        <div class="inst-actions">
+          <button class="inst-vis-btn${inst.visible===false?' dim':''}" title="${inst.visible===false?'Show':'Hide'}" onclick="toggleInstVisible(${i})">${inst.visible===false?'○':'●'}</button>
+          <button class="inst-solo-btn${soloIdx===i?' active':''}" title="Solo" onclick="soloInstance(${i})">◎</button>
+          <button class="inst-copy-btn" title="Duplicate pass" onclick="duplicateInstance(${i})">⊕</button>
+          <button class="inst-rnd" onclick="randomizeInstance(${i})">RND</button>
+          ${buildRemoveBtn(i)}
+        </div>
+      </div>
+      <div class="inst-body">
+        ${buildLockRow(inst,i)}
+        <!-- TRANSFORM SECTION -->
+        <button class="inst-shape-toggle" id="transfbtn-${i}" onclick="toggleSection(${i},'transform')">${inst.transformOpen?'▾':'▸'} TRANSFORM</button>
+        <div class="inst-shape-body ${inst.transformOpen?'open':''}" id="transf-${i}">
+          <div class="ctrl">
+            <div class="ctrl-head"><span class="ctrl-label">Phase offset</span><input type="number" class="ctrl-val-input" id="ipv-${i}" min="0" max="6.28" step="0.01" value="${inst.phaseOffset.toFixed(2)}" onchange="const v=Math.max(0,Math.min(6.28,parseFloat(this.value)||0));this.value=v.toFixed(2);document.getElementById('ip-${i}').value=v;setInstPhase(${i},v);"></div>
+            <input type="range" id="ip-${i}" min="0" max="6.28" step="0.01" value="${inst.phaseOffset}" onmousedown="pushUndo()" oninput="setInstPhase(${i},this.value)">
+          </div>
+          <div class="ctrl-row-2">
+            <div class="ctrl-mini">
+              <div class="ctrl-head"><span class="ctrl-label">X Offset</span><input type="number" class="ctrl-val-input" id="ioxv-${i}" min="-1" max="1" step="0.02" value="${(inst.offsetX||0).toFixed(2)}" onchange="const v=Math.max(-1,Math.min(1,parseFloat(this.value)||0));this.value=v.toFixed(2);document.getElementById('iox-${i}').value=v;setInstOffset(${i},'x',v);"></div>
+              <input type="range" id="iox-${i}" min="-1" max="1" step="0.02" value="${inst.offsetX||0}" onmousedown="pushUndo()" oninput="setInstOffset(${i},'x',this.value)">
+            </div>
+            <div class="ctrl-mini">
+              <div class="ctrl-head"><span class="ctrl-label">Y Offset</span><input type="number" class="ctrl-val-input" id="ioyv-${i}" min="-1" max="1" step="0.02" value="${(inst.offsetY||0).toFixed(2)}" onchange="const v=Math.max(-1,Math.min(1,parseFloat(this.value)||0));this.value=v.toFixed(2);document.getElementById('ioy-${i}').value=v;setInstOffset(${i},'y',v);"></div>
+              <input type="range" id="ioy-${i}" min="-1" max="1" step="0.02" value="${inst.offsetY||0}" onmousedown="pushUndo()" oninput="setInstOffset(${i},'y',this.value)">
+            </div>
+            <div class="ctrl-mini">
+              <div class="ctrl-head"><span class="ctrl-label">Scale</span><input type="number" class="ctrl-val-input" id="iscv-${i}" min="0.1" max="2" step="0.05" value="${(inst.scale||1).toFixed(2)}" onchange="const v=Math.max(0.1,Math.min(2,parseFloat(this.value)||1));this.value=v.toFixed(2);document.getElementById('isc-${i}').value=v;setInstScale(${i},v);"></div>
+              <input type="range" id="isc-${i}" min="0.1" max="2" step="0.05" value="${inst.scale||1}" oninput="setInstScale(${i},this.value)">
+            </div>
+            <div class="ctrl-mini">
+              <div class="ctrl-head"><span class="ctrl-label">Rotation °</span><input type="number" class="ctrl-val-input" id="irotv-${i}" min="-180" max="180" step="1" value="${Math.round(inst.rotation||0)}" onchange="const v=Math.max(-180,Math.min(180,Math.round(parseFloat(this.value)||0)));this.value=v;document.getElementById('irot-${i}').value=v;setInstRotation(${i},v);"></div>
+              <input type="range" id="irot-${i}" min="-180" max="180" step="1" value="${inst.rotation||0}" oninput="setInstRotation(${i},this.value)">
+            </div>
+          </div>
+          <button class="reset-transform-btn" onclick="resetTransform(${i})">↺ Reset transform</button>
+        </div>
+        <!-- PHASES SECTION -->
+        <button class="inst-shape-toggle" id="phsbtn-${i}" onclick="toggleSection(${i},'phases')">${inst.phasesOpen?'▾':'▸'} PHASES &mdash; ${inst.phases||1}&times;</button>
+        <div class="inst-shape-body ${inst.phasesOpen?'open':''}" id="phss-${i}">
+          <div class="phases-row" id="phases-row-${i}">${buildPhasesRow(inst,i)}</div>
+        </div>
+        <!-- SHAPE SECTION -->
+        <button class="inst-shape-toggle" id="shapebtn-${i}" onclick="toggleSection(${i},'shape')">${isOpen?'▾':'▸'} SHAPE &mdash; X:${RATIOS[inst.ratioX].label} Y:${RATIOS[inst.ratioY].label}</button>
+        <div class="inst-shape-body ${isOpen?'open':''}" id="shape-${i}">
+          <div style="font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px;">X Ratio</div>
+          <div class="ratio-grid" id="rx-${i}"></div>
+          <div style="font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px;margin-top:4px;">Y Ratio</div>
+          <div class="ratio-grid" id="ry-${i}"></div>
+          <!-- DETUNE X -->
+          <div class="ctrl" style="margin-top:5px;">
+            <div class="ctrl-head"><span class="ctrl-label">Detune${inst.detuneY!=null?' X':''}</span><input type="number" class="ctrl-val-input" id="idet-${i}" value="${inst.detune.toFixed(4)}" min="0" max="0.0125" step="0.0002" onchange="setInstDetune(${i},this.value);document.getElementById('idetslider-'+${i}).value=this.value;"></div>
+            <input type="range" id="idetslider-${i}" min="0" max="0.0125" step="0.0002" value="${inst.detune}" oninput="setInstDetune(${i},this.value)">
+          </div>
+          <!-- ASYMMETRIC DETUNE Y TOGGLE -->
+          <div style="display:flex;align-items:center;gap:5px;margin-bottom:4px;">
+            <button class="asym-btn${inst.detuneY!=null?' on':''}" id="asymbtn-${i}" onclick="toggleAsymDetune(${i})" title="Split X and Y detune independently">${inst.detuneY!=null?'⊞ Asym Y ON':'⊞ Asym Y'}</button>
+            <span style="font-size:7.5px;color:var(--mid);">X/Y drift independently</span>
+          </div>
+          <!-- DETUNE Y (visible only when detuneY != null) -->
+          <div id="detuneY-wrap-${i}" style="display:${inst.detuneY!=null?'block':'none'}">
+            <div class="ctrl">
+              <div class="ctrl-head"><span class="ctrl-label">Detune Y</span><input type="number" class="ctrl-val-input" id="idetY-${i}" value="${(inst.detuneY!=null?inst.detuneY:inst.detune).toFixed(4)}" min="0" max="0.0125" step="0.0002" onchange="setInstDetuneY(${i},this.value);document.getElementById('idetYslider-'+${i}).value=this.value;"></div>
+              <input type="range" id="idetYslider-${i}" min="0" max="0.0125" step="0.0002" value="${inst.detuneY!=null?inst.detuneY:inst.detune}" oninput="setInstDetuneY(${i},this.value)">
+            </div>
+          </div>
+          <!-- AMPLITUDE DECAY -->
+          <div style="font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--mid);margin:5px 0 3px;">Amplitude Decay</div>
+          <div class="ctrl-row-2">
+            <div class="ctrl-mini">
+              <div class="ctrl-head"><span class="ctrl-label">Decay X</span><input type="number" class="ctrl-val-input" id="idecXv-${i}" value="${(inst.decayX||0).toFixed(1)}" min="0" max="10" step="0.1" onchange="setInstDecay(${i},'X',this.value);document.getElementById('idecX-'+${i}).value=this.value;"></div>
+              <input type="range" id="idecXsl-${i}" min="0" max="10" step="0.1" value="${inst.decayX||0}" oninput="setInstDecay(${i},'X',this.value)">
+            </div>
+            <div class="ctrl-mini">
+              <div class="ctrl-head"><span class="ctrl-label">Decay Y</span><input type="number" class="ctrl-val-input" id="idecYv-${i}" value="${(inst.decayY||0).toFixed(1)}" min="0" max="10" step="0.1" onchange="setInstDecay(${i},'Y',this.value);document.getElementById('idecY-'+${i}).value=this.value;"></div>
+              <input type="range" id="idecYsl-${i}" min="0" max="10" step="0.1" value="${inst.decayY||0}" oninput="setInstDecay(${i},'Y',this.value)">
+            </div>
+          </div>
+          <!-- ROTOR TABS -->
+          <div class="tab-row" id="rtab-row-${i}">
+            <div class="tab ${inst.rotorTab==='p1'?'active':''}" onclick="showInstTab(${i},'p1')">R1 X</div>
+            <div class="tab ${inst.rotorTab==='p2'?'active':''}" onclick="showInstTab(${i},'p2')">R2 X</div>
+            <div class="tab ${inst.rotorTab==='p3'?'active':''}" onclick="showInstTab(${i},'p3')">R3 Y</div>
+            <div class="tab ${inst.rotorTab==='p4'?'active':''}" onclick="showInstTab(${i},'p4')">R4 Y</div>
+          </div>
+          <div id="rpanel-${i}-p1" style="display:${inst.rotorTab==='p1'?'block':'none'}">
+            <div class="ctrl"><div class="ctrl-head"><span class="ctrl-label">Amplitude A1</span><input type="number" class="ctrl-val-input" id="iA1v-${i}" value="${inst.A1.toFixed(2)}" min="0" max="1" step="0.01" onchange="document.getElementById('iA1-'+${i}).value=this.value;setInstAmp(${i});"></div><input type="range" id="iA1-${i}" min="0" max="1" step="0.01" value="${inst.A1}" oninput="setInstAmp(${i})"></div>
+            <div class="ctrl"><div class="ctrl-head"><span class="ctrl-label">Phase p1</span><input type="number" class="ctrl-val-input" id="ip1v-${i}" value="${inst.p1.toFixed(2)}" min="0" max="6.28" step="0.01" onchange="document.getElementById('ip1-'+${i}).value=this.value;setInstParam(${i},'p1',this.value);"><span class="unit-lbl">rad</span></div><input type="range" id="ip1-${i}" min="0" max="6.28" step="0.01" value="${inst.p1}" oninput="setInstParam(${i},'p1',this.value)"></div>
+          </div>
+          <div id="rpanel-${i}-p2" style="display:${inst.rotorTab==='p2'?'block':'none'}">
+            <div class="ctrl"><div class="ctrl-head"><span class="ctrl-label">Amplitude A2</span><input type="number" class="ctrl-val-input" id="iA2v-${i}" value="${inst.A2.toFixed(2)}" min="0" max="1" step="0.01" onchange="document.getElementById('iA2-'+${i}).value=this.value;setInstAmp(${i});"></div><input type="range" id="iA2-${i}" min="0" max="1" step="0.01" value="${inst.A2}" oninput="setInstAmp(${i})"></div>
+            <div class="ctrl"><div class="ctrl-head"><span class="ctrl-label">Phase p2</span><input type="number" class="ctrl-val-input" id="ip2v-${i}" value="${inst.p2.toFixed(2)}" min="0" max="6.28" step="0.01" onchange="document.getElementById('ip2-'+${i}).value=this.value;setInstParam(${i},'p2',this.value);"><span class="unit-lbl">rad</span></div><input type="range" id="ip2-${i}" min="0" max="6.28" step="0.01" value="${inst.p2}" oninput="setInstParam(${i},'p2',this.value)"></div>
+          </div>
+          <div id="rpanel-${i}-p3" style="display:${inst.rotorTab==='p3'?'block':'none'}">
+            <div class="ctrl"><div class="ctrl-head"><span class="ctrl-label">Amplitude A3</span><input type="number" class="ctrl-val-input" id="iA3v-${i}" value="${inst.A3.toFixed(2)}" min="0" max="1" step="0.01" onchange="document.getElementById('iA3-'+${i}).value=this.value;setInstAmp(${i});"></div><input type="range" id="iA3-${i}" min="0" max="1" step="0.01" value="${inst.A3}" oninput="setInstAmp(${i})"></div>
+            <div class="ctrl"><div class="ctrl-head"><span class="ctrl-label">Phase p3</span><input type="number" class="ctrl-val-input" id="ip3v-${i}" value="${inst.p3.toFixed(2)}" min="0" max="6.28" step="0.01" onchange="document.getElementById('ip3-'+${i}).value=this.value;setInstParam(${i},'p3',this.value);"><span class="unit-lbl">rad</span></div><input type="range" id="ip3-${i}" min="0" max="6.28" step="0.01" value="${inst.p3}" oninput="setInstParam(${i},'p3',this.value)"></div>
+          </div>
+          <div id="rpanel-${i}-p4" style="display:${inst.rotorTab==='p4'?'block':'none'}">
+            <div class="ctrl"><div class="ctrl-head"><span class="ctrl-label">Amplitude A4</span><input type="number" class="ctrl-val-input" id="iA4v-${i}" value="${inst.A4.toFixed(2)}" min="0" max="1" step="0.01" onchange="document.getElementById('iA4-'+${i}).value=this.value;setInstAmp(${i});"></div><input type="range" id="iA4-${i}" min="0" max="1" step="0.01" value="${inst.A4}" oninput="setInstAmp(${i})"></div>
+            <div class="ctrl"><div class="ctrl-head"><span class="ctrl-label">Phase p4</span><input type="number" class="ctrl-val-input" id="ip4v-${i}" value="${inst.p4.toFixed(2)}" min="0" max="6.28" step="0.01" onchange="document.getElementById('ip4-'+${i}).value=this.value;setInstParam(${i},'p4',this.value);"><span class="unit-lbl">rad</span></div><input type="range" id="ip4-${i}" min="0" max="6.28" step="0.01" value="${inst.p4}" oninput="setInstParam(${i},'p4',this.value)"></div>
+          </div>
+        </div>
+      </div>`;
+    list.appendChild(card);
+    card.addEventListener('dragstart', e=>onCardDragStart(e,i));
+    // Prevent inputs/buttons from triggering card drag
+    card.querySelectorAll('input,button,select').forEach(el=>{
+      el.addEventListener('mousedown', e=>e.stopPropagation());
+    });
+    card.addEventListener('dragover', onCardDragOver);
+    card.addEventListener('dragenter', e=>onCardDragEnter(e,card));
+    card.addEventListener('dragleave', e=>onCardDragLeave(e,card));
+    card.addEventListener('drop', e=>onCardDrop(e,i,card));
+    card.addEventListener('dragend', onCardDragEnd);
+    buildInstRatioButtons(i);
+  });
+}
+
+function buildInstRatioButtons(i){
+  const inst=instances[i];
+  ['x','y'].forEach(axis=>{
+    const el=document.getElementById(`r${axis}-${i}`);
+    if(!el)return;
+    el.innerHTML='';
+    RATIOS.forEach((r,ri)=>{
+      const b=document.createElement('button');
+      b.className='ratio-btn'+((axis==='x'?inst.ratioX:inst.ratioY)===ri?' active':'');
+      b.textContent=r.label;
+      b.onclick=()=>{
+        if(axis==='x')instances[i].ratioX=ri; else instances[i].ratioY=ri;
+        buildInstRatioButtons(i);
+        updateShapeLabel(i);
+        redraw();
+      };
+      el.appendChild(b);
+    });
+  });
+}
+
+function updateShapeLabel(i){
+  const inst=instances[i];
+  const btn=document.getElementById(`shapebtn-${i}`);
+  if(btn) btn.innerHTML=`${inst.shapeOpen?'▾':'▸'} SHAPE &mdash; X:${RATIOS[inst.ratioX].label} Y:${RATIOS[inst.ratioY].label}`;
+}
+
+function toggleSection(i, key){
+  instances[i][key+'Open']=!instances[i][key+'Open'];
+  const isOpen=instances[i][key+'Open'];
+  const bodyId=key==='shape'?`shape-${i}`:key==='transform'?`transf-${i}`:`phss-${i}`;
+  const body=document.getElementById(bodyId);
+  if(body) body.classList.toggle('open', isOpen);
+  const btn=document.getElementById(`${key==='shape'?'shape':key==='transform'?'transf':'phs'}btn-${i}`);
+  if(btn){
+    const inst=instances[i];
+    let label;
+    if(key==='shape') label=`SHAPE &mdash; X:${RATIOS[inst.ratioX].label} Y:${RATIOS[inst.ratioY].label}`;
+    else if(key==='transform') label='TRANSFORM';
+    else label=`PHASES &mdash; ${inst.phases||1}&times;`;
+    btn.innerHTML=(isOpen?'▾':'▸')+' '+label;
+  }
+}
+
+function showInstTab(i,tab){
+  instances[i].rotorTab=tab;
+  ['p1','p2','p3','p4'].forEach(t=>{
+    const p=document.getElementById(`rpanel-${i}-${t}`);
+    if(p)p.style.display=t===tab?'block':'none';
+  });
+  const row=document.getElementById(`rtab-row-${i}`);
+  if(row)row.querySelectorAll('.tab').forEach((el,ti)=>{
+    el.classList.toggle('active',['p1','p2','p3','p4'][ti]===tab);
+  });
+}
+
+function setInstColor(i,v){instances[i].color=v;const s=document.getElementById('sw-'+i);const h=document.getElementById('ch-'+i);if(s)s.style.background=v;if(h)h.textContent=v;redraw();}
+function setInstPhase(i,v){instances[i].phaseOffset=parseFloat(v);const el=document.getElementById('ipv-'+i);if(el)el.value=parseFloat(v).toFixed(2);redraw();}
+function setInstDetune(i,v){instances[i].detune=parseFloat(v);const el=document.getElementById(`idet-${i}`);if(el)el.textContent=parseFloat(v).toFixed(4);redraw();}
+
+function setInstParam(i,param,v){
+  instances[i][param]=parseFloat(v);
+  const vEl=document.getElementById(`i${param}v-${i}`);
+  if(vEl)vEl.textContent=parseFloat(v).toFixed(2);
+  redraw();
+}
+
+function setInstAmp(i){
+  const inst=instances[i];
+  ['A1','A2','A3','A4'].forEach(k=>{
+    const el=document.getElementById(`i${k}-${i}`);
+    if(el)inst[k]=parseFloat(el.value);
+  });
+  if(inst.A1+inst.A2>1){const r=1/(inst.A1+inst.A2);inst.A1*=r;inst.A2*=r;}
+  if(inst.A3+inst.A4>1){const r=1/(inst.A3+inst.A4);inst.A3*=r;inst.A4*=r;}
+  ['A1','A2','A3','A4'].forEach(k=>{
+    const el=document.getElementById(`i${k}-${i}`);if(el)el.value=inst[k];
+    const vel=document.getElementById(`i${k}v-${i}`);if(vel)vel.textContent=inst[k].toFixed(2);
+  });
+  updateFit();redraw();
+}
+
+function setInstOffset(i, axis, v){
+  if(axis==='x') instances[i].offsetX=parseFloat(v); else instances[i].offsetY=parseFloat(v);
+  const el=document.getElementById(axis==='x'?`ioxv-${i}`:`ioyv-${i}`);
+  if(el) el.value=parseFloat(v).toFixed(2);
+  redraw();
+}
+function setInstScale(i, v){
+  instances[i].scale=parseFloat(v);
+  const el=document.getElementById(`iscv-${i}`);
+  if(el) el.value=parseFloat(v).toFixed(2);
+  redraw();
+}
+function setInstRotation(i, v){
+  instances[i].rotation=parseFloat(v);
+  const el=document.getElementById(`irotv-${i}`);
+  if(el) el.value=Math.round(parseFloat(v));
+  redraw();
+}
+
+function resetTransform(i){
+  const inst=instances[i];
+  inst.phaseOffset=0; inst.offsetX=0; inst.offsetY=0; inst.scale=1.0; inst.rotation=0;
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v;};
+  set('ip-'+i,0);    set('ipv-'+i,'0.00');
+  set('iox-'+i,0);   set('ioxv-'+i,'0.00');
+  set('ioy-'+i,0);   set('ioyv-'+i,'0.00');
+  set('isc-'+i,1);   set('iscv-'+i,'1.00');
+  set('irot-'+i,0);  set('irotv-'+i,0);
+  redraw();
+}
+
+function setInstPhases(i, n){
+  instances[i].phases=n;
+  const row=document.getElementById(`phases-row-${i}`);
+  if(row) row.querySelectorAll('.phase-btn').forEach((btn,bi)=>{
+    btn.classList.toggle('active',[1,2,3,4,6,8][bi]===n);
+  });
+  // Keep phases section button label in sync
+  const btn=document.getElementById(`phsbtn-${i}`);
+  if(btn) btn.innerHTML=`${instances[i].phasesOpen?'▾':'▸'} PHASES &mdash; ${n}&times;`;
+  redraw();
+}
+
+function randomizeInstance(i, silent=false){
+  if(!silent) pushUndo();
+  const r=Math.random;
+  const inst=instances[i];
+  const lk=inst.locks||{};
+  if(!lk.ratioX) inst.ratioX=Math.floor(r()*RATIOS.length);
+  if(!lk.ratioY) inst.ratioY=Math.floor(r()*RATIOS.length);
+  if(!lk.amp){
+    const a1=+(0.40+r()*0.35).toFixed(2); inst.A1=a1; inst.A2=+(1-a1).toFixed(2);
+    const a3=+(0.40+r()*0.35).toFixed(2); inst.A3=a3; inst.A4=+(1-a3).toFixed(2);
+    inst.p1=+(r()*6.28).toFixed(2); inst.p2=+(r()*6.28).toFixed(2);
+    inst.p3=+(r()*6.28).toFixed(2); inst.p4=+(r()*6.28).toFixed(2);
+  }
+  if(!lk.phaseOffset) inst.phaseOffset=+(r()*6.28).toFixed(2);
+  if(!lk.detune) inst.detune=+(0.001+r()*0.0115).toFixed(4);
+  if(!lk.color){
+    inst.color='#'+[...Array(3)].map(()=>Math.floor(40+r()*180).toString(16).padStart(2,'0')).join('');
+  }
+  inst.offsetX=0; inst.offsetY=0; inst.scale=1.0; inst.rotation=0; inst.phases=1;
+  if(!silent){buildInstancesUI();updateFit();redraw();}
+}
+
+function addInstance(){
+  pushUndo();
+  const base=instances[instances.length-1]||DEF_INST();
+  instances.push({...JSON.parse(JSON.stringify(base)),
+    color:DEF_COLORS[instances.length%DEF_COLORS.length],
+    phaseOffset:(instances.length*0.4)%6.28,
+    shapeOpen:false, rotorTab:'p1'
+  });
+  buildInstancesUI();redraw();
+}
+
+function removeInstance(i){pushUndo();instances.splice(i,1);buildInstancesUI();redraw();}
+
+function toggleInstVisible(i){
+  instances[i].visible = instances[i].visible===false ? true : false;
+  buildInstancesUI(); redraw();
+}
+function soloInstance(i){
+  soloIdx = soloIdx===i ? -1 : i;
+  buildInstancesUI(); redraw();
+}
+function duplicateInstance(i){
+  pushUndo();
+  const clone = JSON.parse(JSON.stringify(instances[i]));
+  instances.splice(i+1, 0, clone);
+  buildInstancesUI(); updateFit(); redraw();
+}
+
+let dragSrcIdx = -1;
+function onCardDragStart(e, i){ if(!e.target.classList.contains('drag-handle')){e.preventDefault();return;} dragSrcIdx=i; e.dataTransfer.effectAllowed='move'; }
+function onCardDragOver(e){ e.preventDefault(); e.dataTransfer.dropEffect='move'; }
+function onCardDragEnter(e, el){ el.classList.add('drag-over'); }
+function onCardDragLeave(e, el){ el.classList.remove('drag-over'); }
+function onCardDrop(e, i, el){
+  el.classList.remove('drag-over');
+  if(dragSrcIdx<0||dragSrcIdx===i)return;
+  const moved=instances.splice(dragSrcIdx,1)[0];
+  instances.splice(i,0,moved);
+  dragSrcIdx=-1;
+  buildInstancesUI(); redraw();
+}
+function onCardDragEnd(){ dragSrcIdx=-1; document.querySelectorAll('.instance-card').forEach(c=>c.classList.remove('drag-over')); }
+
+// ─── UNDO/REDO ──────────────────────────────────────────
+function snapshotState(){return JSON.stringify({P:{...P},instances:JSON.parse(JSON.stringify(instances)),soloIdx});}
+function pushUndo(){
+  undoHistory=undoHistory.slice(0,undoPos+1);
+  undoHistory.push(snapshotState());
+  if(undoHistory.length>MAX_UNDO)undoHistory.shift();
+  undoPos=undoHistory.length-1;
+}
+function applySnapshot(json){
+  const s=JSON.parse(json);
+  P=s.P; instances=s.instances; soloIdx=s.soloIdx||-1;
+  ['steps','dt','strokeW','alpha'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.value=P[id];
+    const vEl=document.getElementById('v-'+id);if(vEl)vEl.textContent=P[id]<0.01?P[id].toFixed(4):P[id].toFixed(2);
+  });
+  document.getElementById('seed-input').value=P.seed;
+  const newBg=P.colBg;document.getElementById('colBg').value=newBg;document.getElementById('bg-swatch').style.background=newBg;document.getElementById('bg-hex').textContent=newBg;
+  buildInstancesUI();updateFit();redraw();
+}
+function undo(){if(undoPos<=0)return;undoPos--;applySnapshot(undoHistory[undoPos]);updateUndoRedoBtns();}
+function redo(){if(undoPos>=undoHistory.length-1)return;undoPos++;applySnapshot(undoHistory[undoPos]);updateUndoRedoBtns();}
+function updateUndoRedoBtns(){
+  const bu=document.getElementById('btn-undo'), br=document.getElementById('btn-redo');
+  if(bu)bu.style.opacity=undoPos<=0?'0.4':'';
+  if(br)br.style.opacity=undoPos>=undoHistory.length-1?'0.4':'';
+}
+
+// ─── LOCK TOGGLE ─────────────────────────────────────────
+function toggleLock(i, key){
+  if(!instances[i].locks) instances[i].locks={};
+  instances[i].locks[key] = !instances[i].locks[key];
+  // Re-render just the lock row without full rebuild
+  const card=document.querySelector(`[data-idx="${i}"] .lock-row`);
+  if(card){
+    card.querySelectorAll('.lock-btn').forEach((btn,bi)=>{
+      const k=['color','ratioX','ratioY','amp','phaseOffset','detune'][bi];
+      btn.classList.toggle('locked', !!(instances[i].locks[k]));
+    });
+  }
+}
+
+// ─── ASYMMETRIC DETUNE ───────────────────────────────────
+function toggleAsymDetune(i){
+  const inst=instances[i];
+  if(inst.detuneY!=null){
+    inst.detuneY=null;  // link back
+  } else {
+    inst.detuneY=inst.detune; // start at same value
+  }
+  const wrap=document.getElementById(`detuneY-wrap-${i}`);
+  if(wrap) wrap.style.display=inst.detuneY!=null?'block':'none';
+  const btn=document.getElementById(`asymbtn-${i}`);
+  if(btn){ btn.classList.toggle('on', inst.detuneY!=null); btn.textContent=inst.detuneY!=null?'⊞ Asym Y ON':'⊞ Asym Y'; }
+  // Update detune X label
+  const detLbl=document.querySelector(`#idetslider-${i}`)?.closest('.ctrl')?.querySelector('.ctrl-label');
+  if(detLbl) detLbl.textContent=inst.detuneY!=null?'Detune X':'Detune';
+  // Sync Y slider value
+  const ysl=document.getElementById(`idetYslider-${i}`);
+  const yv=document.getElementById(`idetY-${i}`);
+  if(ysl && inst.detuneY!=null){ ysl.value=inst.detuneY; if(yv) yv.textContent=inst.detuneY.toFixed(4); }
+  redraw();
+}
+function setInstDetuneY(i,v){
+  instances[i].detuneY=parseFloat(v);
+  const el=document.getElementById(`idetY-${i}`);
+  if(el) el.value=parseFloat(v).toFixed(4);
+  redraw();
+}
+
+// ─── AMPLITUDE DECAY ─────────────────────────────────────
+function setInstDecay(i, axis, v){
+  const key='decay'+axis;
+  instances[i][key]=parseFloat(v);
+  const el=document.getElementById(`idec${axis}v-${i}`);
+  if(el) el.textContent=parseFloat(v).toFixed(1);
+  redraw();
+}
+
+// ─── RANDOMISE ALL ───────────────────────────────────────
+function randomizeAll(){
+  pushUndo();
+  // Randomise global rendering params
+  P.seed=Math.floor(Math.random()*9999)+1;
+  P.strokeW=+(0.10+Math.random()*0.60).toFixed(2);
+  P.alpha=Math.floor(10+Math.random()*70);
+  P.dt=+(0.015+Math.random()*0.085).toFixed(3);
+  // Sync global sliders
+  ['strokeW','alpha','dt'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value=P[id];
+    const vEl=document.getElementById('v-'+id);
+    if(vEl) vEl.textContent=P[id]<0.01?P[id].toFixed(4):P[id].toFixed(2);
+  });
+  document.getElementById('seed-input').value=P.seed;
+  // Randomise all passes (respects their individual locks)
+  instances.forEach((_,i)=>randomizeInstance(i,true));
+  buildInstancesUI(); updateFit(); redraw();
+}
+
+// ─── USER PRESET MANAGEMENT ──────────────────────────────
+const PRESET_KEY_PFX='hg_preset_';
+let activeUserPreset=null;
+
+function getAllUserPresets(){
+  const names=[];
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(k&&k.startsWith(PRESET_KEY_PFX)) names.push(k.slice(PRESET_KEY_PFX.length));
+  }
+  return names.sort((a,b)=>a.localeCompare(b));
+}
+
+function saveUserPreset(){
+  const inp=document.getElementById('preset-name-input');
+  const name=(inp?inp.value.trim():'').replace(/[^a-zA-Z0-9 _\-]/g,'');
+  if(!name){inp&&inp.classList.add('error');setTimeout(()=>inp&&inp.classList.remove('error'),600);return;}
+  const state={P:{...P},instances:JSON.parse(JSON.stringify(instances)),soloIdx,
+               marginMm,paperKey:document.getElementById('paperSize').value};
+  localStorage.setItem(PRESET_KEY_PFX+name, JSON.stringify(state));
+  activeUserPreset=name;
+  updatePresetDropdown();
+  if(inp) inp.value='';
+}
+
+function loadUserPreset(name){
+  const raw=localStorage.getItem(PRESET_KEY_PFX+name);
+  if(!raw)return;
+  pushUndo();
+  const state=JSON.parse(raw);
+  P=state.P; instances=state.instances; soloIdx=state.soloIdx||-1;
+  if(state.marginMm!=null){marginMm=state.marginMm;document.getElementById('margin').value=marginMm;document.getElementById('v-margin').textContent=marginMm;}
+  if(state.paperKey){const sel=document.getElementById('paperSize');if(sel){sel.value=state.paperKey;paper=PAPERS[state.paperKey];}}
+  ['steps','dt','strokeW','alpha'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.value=P[id];
+    const vEl=document.getElementById('v-'+id);if(vEl)vEl.textContent=P[id]<0.01?P[id].toFixed(4):P[id].toFixed(2);
+  });
+  document.getElementById('seed-input').value=P.seed;
+  const newBg=P.colBg;document.getElementById('colBg').value=newBg;document.getElementById('bg-swatch').style.background=newBg;document.getElementById('bg-hex').textContent=newBg;
+  activeUserPreset=name;
+  buildInstancesUI();updatePaperUI();updateFit();redraw();updatePresetDropdown();
+}
+
+function deleteUserPreset(name){
+  localStorage.removeItem(PRESET_KEY_PFX+name);
+  if(activeUserPreset===name) activeUserPreset=null;
+  updatePresetDropdown();
+}
+
+function updatePresetDropdown(){
+  const list=document.getElementById('user-preset-list');
+  if(!list)return;
+  const names=getAllUserPresets();
+  if(names.length===0){list.innerHTML='<div style="font-size:8.5px;color:var(--mid);padding:4px 0;">No saved presets yet.</div>';return;}
+  list.innerHTML='';
+  names.forEach(name=>{
+    const row=document.createElement('div');
+    row.className='user-preset-row'+(activeUserPreset===name?' active':'');
+    const nm=document.createElement('span');
+    nm.className='user-preset-name'; nm.textContent=name;
+    nm.onclick=()=>loadUserPreset(name);
+    const del=document.createElement('button');
+    del.className='user-preset-del'; del.textContent='×';
+    del.onclick=(e)=>{e.stopPropagation();if(confirm(`Delete preset "${name}"?`))deleteUserPreset(name);};
+    row.appendChild(nm); row.appendChild(del);
+    list.appendChild(row);
+  });
+}
+
+function exportPresetJSON(){
+  const state={P:{...P},instances:JSON.parse(JSON.stringify(instances)),soloIdx,
+               marginMm,paperKey:document.getElementById('paperSize').value,
+               exportedAt:new Date().toISOString()};
+  const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download=`harmonograph_s${P.seed}_${Date.now()}.json`;
+  a.click(); URL.revokeObjectURL(url);
+}
+
+function importPresetJSON(input){
+  const file=input.files[0]; if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const state=JSON.parse(e.target.result);
+      if(!state.P||!state.instances)throw new Error('Invalid preset file');
+      pushUndo();
+      P=state.P; instances=state.instances; soloIdx=state.soloIdx||-1;
+      if(state.marginMm!=null){marginMm=state.marginMm;document.getElementById('margin').value=marginMm;document.getElementById('v-margin').textContent=marginMm;}
+      if(state.paperKey){const sel=document.getElementById('paperSize');if(sel){sel.value=state.paperKey;paper=PAPERS[state.paperKey];}}
+      ['steps','dt','strokeW','alpha'].forEach(id=>{
+        const el=document.getElementById(id);if(el)el.value=P[id];
+        const vEl=document.getElementById('v-'+id);if(vEl)vEl.textContent=P[id]<0.01?P[id].toFixed(4):P[id].toFixed(2);
+      });
+      document.getElementById('seed-input').value=P.seed;
+      const newBg=P.colBg;document.getElementById('colBg').value=newBg;document.getElementById('bg-swatch').style.background=newBg;document.getElementById('bg-hex').textContent=newBg;
+      buildInstancesUI();updatePaperUI();updateFit();redraw();
+      // Offer to save as named preset
+      const name=file.name.replace(/\.json$/i,'').replace(/[^a-zA-Z0-9 _\-]/g,'').trim();
+      if(name){ document.getElementById('preset-name-input').value=name; }
+    }catch(err){alert('Could not load preset: '+err.message);}
+    input.value='';
+  };
+  reader.readAsText(file);
+}
+
+// ─── COMPUTE ─────────────────────────────────────────────
+// Per-instance rotary model. Each pass has its own freq ratios, rotors, detune.
+// x = A1·cos(f1·t + p1 + po) + A2·cos(f2·t + p2)
+// y = A3·cos(f3·t + p3 + po) + A4·cos(f4·t + p4)
+// Amplitude decay: decayX and decayY exponential factors.
+function computePoints(inst, rotAngle=0){
+  const f={
+    f1:RATIOS[inst.ratioX].f1,
+    f2:RATIOS[inst.ratioX].f2+inst.detune,
+    f3:RATIOS[inst.ratioY].f1,
+    f4:RATIOS[inst.ratioY].f2+(inst.detuneY!=null ? inst.detuneY : inst.detune)
+  };
+  const N=P.steps, u=ampUnit(), sc=computeScale();
+  const isc=sc*(inst.scale||1.0);
+  const oxPx=(inst.offsetX||0)*sc, oyPx=-(inst.offsetY||0)*sc;
+  const oxMm=(inst.offsetX||0)*u,  oyMm=-(inst.offsetY||0)*u;
+  const sn=((P.seed*1.618033)%1)*2.5;
+  const cosR=Math.cos(rotAngle), sinR=Math.sin(rotAngle);
+  const totalT=P.steps*P.dt;
+  const pts=[];
+  for(let j=0;j<N;j++){
+    const t=j*P.dt, po=inst.phaseOffset+sn;
+    const decX=Math.exp(-(inst.decayX||0)*t/totalT);
+    const decY=Math.exp(-(inst.decayY||0)*t/totalT);
+    const x=(inst.A1*Math.cos(f.f1*t+inst.p1+po)+inst.A2*Math.cos(f.f2*t+inst.p2))*decX;
+    const y=(inst.A3*Math.cos(f.f3*t+inst.p3+po)+inst.A4*Math.cos(f.f4*t+inst.p4))*decY;
+    const rx=x*cosR-y*sinR, ry=x*sinR+y*cosR;
+    pts.push({sx:csW()/2+rx*isc+oxPx, sy:csH()/2+ry*isc+oyPx, xMm:rx*u*(inst.scale||1)+oxMm, yMm:ry*u*(inst.scale||1)+oyMm});
+  }
+  return pts;
+}
+
+// ─── P5 RENDER ───────────────────────────────────────────
+function hexRgb(h){return[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];}
+
+function buildSketch(p){
+  p.setup=function(){const c=p.createCanvas(csW(),csH());c.parent('canvas-container');p.noLoop();render(p);};
+  p.draw=function(){};
+}
+
+function setExportEnabled(on){const b=document.getElementById('btn-export');if(b){b.disabled=!on;b.style.opacity=on?'':'0.4';b.style.cursor=on?'':'not-allowed';}}
+
+function render(p){
+  const token=++renderToken;
+  setExportEnabled(false);
+  const bg=hexRgb(P.colBg);
+  p.background(bg[0],bg[1],bg[2]);
+  p.noFill(); p.strokeWeight(P.strokeW);
+  const pbW=document.getElementById('progress-wrap');
+  const pb=document.getElementById('progress-bar');
+  pbW.style.display='block'; pb.style.width='0%';
+  allPts=[]; allColors=[];
+  instances.forEach((inst,idx)=>{
+    if(!inst.visible) return;
+    if(soloIdx>=0 && idx!==soloIdx) return;
+    const n=inst.phases||1;
+    for(let k=0;k<n;k++){
+      allPts.push(computePoints(inst,(2*Math.PI*k)/n+(inst.rotation||0)*Math.PI/180));
+      allColors.push(inst.color);
+    }
+  });
+  const total=allPts.length*(P.steps-1);
+  let drawn=0, ii=0, li=0;
+  function batch(){
+    if(token!==renderToken){pbW.style.display='none';setExportEnabled(true);return;}
+    const tgt=drawn+5000;
+    while(drawn<tgt&&ii<allPts.length){
+      const pts=allPts[ii];
+      const col=hexRgb(allColors[ii]);
+      const end=Math.min(li+5000,pts.length-1);
+      for(;li<end;li++,drawn++){
+        p.stroke(col[0],col[1],col[2],P.alpha);
+        p.line(pts[li].sx,pts[li].sy,pts[li+1].sx,pts[li+1].sy);
+      }
+      if(li>=pts.length-1){ii++;li=0;}
+    }
+    pb.style.width=(drawn/total*100).toFixed(1)+'%';
+    if(drawn<total) requestAnimationFrame(batch);
+    else{
+      pbW.style.display='none';
+      setExportEnabled(true);
+      const totalPasses=allPts.length;
+      document.getElementById('canvas-meta').innerHTML=
+        `${paper.name} &nbsp;·&nbsp; ${instances.length} pass${instances.length>1?'es':''} (${totalPasses} drawn) &nbsp;·&nbsp; seed:${P.seed} &nbsp;·&nbsp; rotary`;
+      updateOverlay();
+    }
+  }
+  batch();
+}
+
+// ─── SVG EXPORT ──────────────────────────────────────────
+function exportSVG(){
+  if(!allPts.length)return;
+  const W=paper.w, H=paper.h, cx=W/2, cy=H/2, m=marginMm;
+  const marginRect=`  <rect x="${m}" y="${m}" width="${W-m*2}" height="${H-m*2}" fill="none" stroke="#aaa" stroke-width="0.2" stroke-dasharray="2,2" id="margin-guide"/>`;
+  const layers=allPts.map((pts,i)=>{
+    if(!pts||pts.length<2)return'';
+    const col=allColors[i];
+    const lines=[];
+    for(let j=0;j<pts.length-1;j++){
+      const a=pts[j], b=pts[j+1];
+      lines.push(`<line x1="${(cx+a.xMm).toFixed(3)}" y1="${(cy+a.yMm).toFixed(3)}" x2="${(cx+b.xMm).toFixed(3)}" y2="${(cy+b.yMm).toFixed(3)}"/>`);
+    }
+    return`  <!-- Draw pass ${i+1} — pen: ${col} -->\n  <g id="layer${i+1}" stroke="${col}" stroke-width="${P.strokeW}" stroke-linecap="round" fill="none">\n    ${lines.join('\n    ')}\n  </g>`;
+  }).join('\n\n');
+  const svg=`<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" width="${W}mm" height="${H}mm" viewBox="0 0 ${W} ${H}">\n  <rect width="${W}" height="${H}" fill="${P.colBg}"/>\n${marginRect}\n${layers}\n</svg>`;
+  const blob=new Blob([svg],{type:'image/svg+xml'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download=`harmonograph_${paper.name.replace(/ /g,'_')}_s${P.seed}.svg`;
+  a.click(); URL.revokeObjectURL(url);
+}
+
+// ─── UI HELPERS ──────────────────────────────────────────
+function sv(id){
+  const v=parseFloat(document.getElementById(id).value);
+  const el=document.getElementById('v-'+id);
+  if(el){const fmt=v<0.01?v.toFixed(4):v.toFixed(2);if(el.tagName==='INPUT')el.value=fmt;else el.textContent=fmt;}
+  P[id]=v; redraw();
+}
+function svInput(id,val){
+  const v=parseFloat(val); if(isNaN(v)) return;
+  const slider=document.getElementById(id);
+  if(slider) slider.value=v;
+  P[id]=v; redraw();
+}
+
+function redraw(){if(myp5){myp5.clear();render(myp5);}}
+function stepSeed(d){P.seed=Math.max(1,P.seed+d);document.getElementById('seed-input').value=P.seed;redraw();}
+function rndSeed(){P.seed=Math.floor(Math.random()*9999)+1;document.getElementById('seed-input').value=P.seed;redraw();}
+
+function applyPreset(name){
+  pushUndo();
+  const pr=PRESETS[name];
+  ['steps','dt','strokeW','alpha'].forEach(k=>{if(pr[k]!==undefined)P[k]=pr[k];});
+  const newBg=pr.colBg||'#f5f4f0'; P.colBg=newBg; document.getElementById('colBg').value=newBg; document.getElementById('bg-swatch').style.background=newBg; document.getElementById('bg-hex').textContent=newBg;
+  instances=pr.instances.map(inst=>({...DEF_INST(),...JSON.parse(JSON.stringify(inst))}));
+  // Sync global sliders
+  ['steps','dt','strokeW','alpha'].forEach(id=>{
+    const el=document.getElementById(id); if(el)el.value=P[id];
+    const vEl=document.getElementById('v-'+id);
+    if(vEl)vEl.textContent=P[id]<0.01?P[id].toFixed(4):P[id].toFixed(2);
+  });
+  document.getElementById('seed-input').value=P.seed;
+  document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('active'));
+  const btn=document.getElementById('preset-'+name); if(btn)btn.classList.add('active');
+  buildInstancesUI(); updateFit(); redraw();
+}
+
+function onBgChange(){
+  P.colBg=document.getElementById('colBg').value;
+  document.getElementById('bg-swatch').style.background=P.colBg;
+  document.getElementById('bg-hex').textContent=P.colBg;
+  redraw();
+}
+
+function resetDefaults(){
+  pushUndo();
+  P={seed:1,steps:50000,dt:0.04,strokeW:0.35,alpha:35,colBg:'#f5f4f0'};
+  marginMm=15;
+  document.getElementById('margin').value=15;
+  document.getElementById('v-margin').textContent=15;
+  instances=[{...DEF_INST(),color:'#3355bb',phaseOffset:0},{...DEF_INST(),color:'#bb3355',phaseOffset:0.3}];
+  ['steps','dt','strokeW','alpha'].forEach(id=>{
+    const el=document.getElementById(id); if(el)el.value=P[id];
+    const vEl=document.getElementById('v-'+id); if(vEl)vEl.textContent=P[id].toFixed(2);
+  });
+  document.getElementById('seed-input').value=P.seed;
+  document.getElementById('colBg').value=P.colBg;
+  document.getElementById('bg-swatch').style.background=P.colBg;
+  document.getElementById('bg-hex').textContent=P.colBg;
+  buildInstancesUI(); updateFit();
+  document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('active'));
+  redraw();
+}
+
+window.addEventListener('load',()=>{
+  buildInstancesUI(); updatePaperUI();
+  document.getElementById('preset-lobed').classList.add('active');
+  document.getElementById('seed-input').addEventListener('change',function(){P.seed=Math.max(1,parseInt(this.value)||1);this.value=P.seed;redraw();});
+  myp5=new p5(buildSketch);
+  // Size wrap once canvas exists, then keep in sync with window resizes
+  setTimeout(updateCanvasWrapSize, 50);
+  window.addEventListener('resize', updateCanvasWrapSize);
+  // Keyboard shortcuts: Ctrl+Z undo, Ctrl+Y / Ctrl+Shift+Z redo
+  window.addEventListener('keydown', e=>{
+    const activeTag=(document.activeElement||{}).tagName||'';
+    if(activeTag==='INPUT'||activeTag==='TEXTAREA'||activeTag==='SELECT')return;
+    const ctrl=e.ctrlKey||e.metaKey;
+    if(ctrl && e.key==='z' && !e.shiftKey){e.preventDefault();undo();}
+    else if(ctrl && (e.key==='y'||(e.key==='z'&&e.shiftKey))){e.preventDefault();redo();}
+  });
+  // Init undo state and preset list
+  pushUndo();
+  updateUndoRedoBtns();
+  updatePresetDropdown();
+});
+</script>
+</body>
+</html>
