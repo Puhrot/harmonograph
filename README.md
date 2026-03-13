@@ -4,6 +4,8 @@ A browser-based rotary harmonograph simulator for generative pen plotter art. Co
 
 **[Live demo →](https://puhrot.github.io/harmonograph)**
 
+> 📖 **[User Manual →](Harmonograph_User_Manual.docx)** — Full documentation covering every control, workflow tips, and mathematical reference.
+
 ---
 
 ## What is a harmonograph?
@@ -86,13 +88,14 @@ open index.html   # macOS
 
 ```
 harmonograph/
-├── index.html          # The entire application (single file)
+├── index.html                    # The entire application (single file)
+├── Harmonograph_User_Manual.docx # Full user manual
 ├── docs/
-│   ├── CONTROLS.md     # Full parameter reference
-│   └── ARCHITECTURE.md # Code structure notes
+│   ├── CONTROLS.md               # Full parameter reference
+│   └── ARCHITECTURE.md           # Code structure notes
 ├── CHANGELOG.md
 ├── LICENSE
-└── package.json        # Project metadata only (no build step)
+└── package.json                  # Project metadata only (no build step)
 ```
 
 ---
