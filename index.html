@@ -35,6 +35,23 @@ body { font-family:'Space Grotesk',sans-serif; background:var(--bg); height:100v
   font-size:8.5px; line-height:1.4; color:#9ecfbf; max-width:420px;
   border-left:2px solid rgba(0,200,160,0.35); padding-left:14px;
 }
+.header-actions {
+  margin-left:auto; display:flex; align-items:center; gap:5px; flex-shrink:0;
+}
+.hdr-btn, .hdr-label {
+  padding:4px 10px; border:1.5px solid var(--lime); border-radius:0;
+  background:transparent; color:var(--lime); cursor:pointer;
+  font-family:'Space Grotesk',sans-serif; font-size:9px; font-weight:700;
+  letter-spacing:.05em; text-transform:uppercase; transition:all .1s;
+  white-space:nowrap; display:inline-flex; align-items:center;
+}
+.hdr-btn:hover, .hdr-label:hover { background:var(--lime); color:var(--black); }
+.hdr-btn:disabled { opacity:0.35; cursor:not-allowed; }
+.hdr-btn:disabled:hover { background:transparent; color:var(--lime); }
+.hdr-btn-y { border-color:var(--yellow); color:var(--yellow); }
+.hdr-btn-y:hover { background:var(--yellow); color:var(--black); }
+.hdr-btn-y:disabled:hover { background:transparent; color:var(--yellow); }
+.hdr-sep { width:1px; height:20px; background:rgba(0,200,160,0.25); }
 .body-row { display:flex; flex:1; overflow:hidden; }
 
 /* ── SIDEBAR ────────────────────────────────────── */
@@ -365,6 +382,15 @@ hr { border:none; border-top:2px solid var(--black); margin:5px 0; }
 <div class="top-header">
   <h1>HARMONOGRAPH</h1>
   <p class="sub">Rotary drawing machine simulator. Each pen pass is a fully independent harmonograph — unique shape, frequency, and rotor settings. Exports per-layer SVG for pen plotters.</p>
+  <div class="header-actions">
+    <button class="hdr-btn" onclick="undo()" id="btn-undo" title="Undo">← Undo</button>
+    <button class="hdr-btn" onclick="redo()" id="btn-redo" title="Redo">Redo →</button>
+    <span class="hdr-sep"></span>
+    <button class="hdr-btn" onclick="exportPresetJSON()" title="Export settings as JSON">↓ Export</button>
+    <label class="hdr-btn hdr-label" title="Import settings from JSON">↑ Import<input type="file" accept=".json" style="display:none" onchange="importPresetJSON(this)"></label>
+    <span class="hdr-sep"></span>
+    <button class="hdr-btn hdr-btn-y" id="btn-export" onclick="exportSVG()" title="Export SVG for pen plotter">↓ SVG</button>
+  </div>
 </div>
 
 <div class="body-row">
@@ -475,22 +501,13 @@ hr { border:none; border-top:2px solid var(--black); margin:5px 0; }
         <button class="btn-sm" onclick="saveUserPreset()">Save</button>
       </div>
       <div id="user-preset-list"></div>
-      <div style="display:flex;gap:3px;margin-top:4px;">
-        <button class="btn-sm" style="flex:1" onclick="exportPresetJSON()">↓ Export JSON</button>
-        <label class="btn-sm" style="flex:1;text-align:center;cursor:pointer;padding:3px 8px;">↑ Import JSON<input type="file" accept=".json" style="display:none" onchange="importPresetJSON(this)"></label>
-      </div>
     </div>
   </div>
 
   <hr>
   <div class="progress-wrap" id="progress-wrap"><div class="progress-bar" id="progress-bar"></div></div>
-  <div style="display:flex;gap:4px;margin-bottom:4px;">
-    <button class="btn btn-w" style="flex:1;margin-bottom:0" onclick="undo()" id="btn-undo">← Undo</button>
-    <button class="btn btn-w" style="flex:1;margin-bottom:0" onclick="redo()" id="btn-redo">Redo →</button>
-  </div>
   <button class="btn btn-w" onclick="randomizeAll()">⚄ Randomise All</button>
   <button class="btn btn-k" onclick="redraw()">↻ Redraw</button>
-  <button class="btn btn-y" id="btn-export" onclick="exportSVG()">↓ Export SVG for Plotter</button>
   <button class="btn btn-w" onclick="resetDefaults()">Reset Defaults</button>
 
 </div><!-- end sidebar -->
@@ -1118,8 +1135,8 @@ function undo(){if(undoPos<=0)return;undoPos--;applySnapshot(undoHistory[undoPos
 function redo(){if(undoPos>=undoHistory.length-1)return;undoPos++;applySnapshot(undoHistory[undoPos]);updateUndoRedoBtns();}
 function updateUndoRedoBtns(){
   const bu=document.getElementById('btn-undo'), br=document.getElementById('btn-redo');
-  if(bu)bu.style.opacity=undoPos<=0?'0.4':'';
-  if(br)br.style.opacity=undoPos>=undoHistory.length-1?'0.4':'';
+  if(bu)bu.disabled=undoPos<=0;
+  if(br)br.disabled=undoPos>=undoHistory.length-1;
 }
 
 // ─── LOCK TOGGLE ─────────────────────────────────────────
@@ -1367,7 +1384,7 @@ function buildSketch(p){
   p.draw=function(){};
 }
 
-function setExportEnabled(on){const b=document.getElementById('btn-export');if(b){b.disabled=!on;b.style.opacity=on?'':'0.4';b.style.cursor=on?'':'not-allowed';}}
+function setExportEnabled(on){const b=document.getElementById('btn-export');if(b){b.disabled=!on;}}
 
 function render(p){
   const token=++renderToken;
