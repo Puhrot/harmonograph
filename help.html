@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harmonograph — User Manual</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root { --black:#0a0a0a; --paper:#e8e2d0; --white:#f2edde; --lime:#00c8a0; --yellow:#e8d400; --pink:#ff69b4; --mid:#6b6355; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html { scroll-behavior:smooth; }
+  body { background:var(--paper); color:var(--black); font-family:'Space Grotesk',sans-serif; font-size:14px; line-height:1.7; }
+
+  /* ── LAYOUT ── */
+  .shell { display:flex; min-height:100vh; }
+
+  /* ── LEFT NAV ── */
+  .sidenav { width:200px; flex-shrink:0; position:sticky; top:0; height:100vh; overflow-y:auto; background:var(--black); display:flex; flex-direction:column; }
+  .sidenav-logo { padding:20px 16px 12px; border-bottom:2px solid rgba(255,255,255,.08); }
+  .sidenav-logo a { text-decoration:none; }
+  .sidenav-logo .mark { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.12em; color:var(--lime); display:block; margin-bottom:2px; }
+  .sidenav-logo .title { font-size:16px; font-weight:700; color:var(--white); letter-spacing:-.01em; display:block; }
+  .sidenav-logo .back { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--mid); text-decoration:none; display:inline-block; margin-top:10px; }
+  .sidenav-logo .back:hover { color:var(--lime); }
+  .nav-list { padding:12px 0 40px; flex:1; }
+  .nav-group-label { font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:.14em; color:var(--mid); padding:16px 16px 4px; }
+  .nav-link { display:flex; align-items:center; gap:8px; padding:7px 16px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:rgba(255,255,255,.5); text-decoration:none; border-left:3px solid transparent; transition:color .1s; }
+  .nav-link:hover { color:var(--white); }
+  .nav-link.active { color:var(--white); border-left-color:var(--lime); background:rgba(255,255,255,.04); }
+  .nav-link .dot { width:6px; height:6px; border-radius:0; flex-shrink:0; }
+  .dot-lime { background:var(--lime); }
+  .dot-yellow { background:var(--yellow); }
+  .dot-pink { background:var(--pink); }
+  .dot-white { background:rgba(255,255,255,.3); }
+
+  /* ── MAIN CONTENT ── */
+  .main { flex:1; min-width:0; }
+  .page-header { background:var(--black); padding:32px 48px 28px; display:flex; align-items:flex-end; justify-content:space-between; }
+  .page-header h1 { font-size:32px; font-weight:700; letter-spacing:-.02em; color:var(--white); }
+  .page-header .sub { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.15em; color:var(--lime); margin-bottom:6px; }
+  .page-header .desc { font-size:11px; color:#6b6355; text-align:right; line-height:1.8; }
+  .content { padding:0 48px 80px; max-width:800px; }
+
+  /* ── SECTIONS ── */
+  .section { padding-top:56px; }
+  h2 { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.14em; margin-bottom:16px; display:flex; align-items:center; gap:10px; }
+  h2::before { content:''; display:block; height:2px; width:28px; background:currentColor; flex-shrink:0; }
+  h2.lime { color:var(--lime); } h2.pink { color:var(--pink); } h2.black { color:var(--black); } h2.yellow { color:var(--mid); }
+  h3 { font-size:13px; font-weight:700; margin:24px 0 8px; }
+  p { margin-bottom:12px; max-width:620px; }
+  ul { margin:8px 0 14px 0; list-style:none; }
+  li { margin-bottom:8px; padding-left:18px; position:relative; }
+  li::before { content:'—'; position:absolute; left:0; color:var(--mid); }
+
+  /* ── UI ELEMENTS ── */
+  .pill { display:inline-block; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; padding:2px 8px; vertical-align:middle; border:2px solid var(--black); background:var(--black); color:var(--white); }
+  .pill.lime { background:var(--lime); border-color:var(--lime); color:var(--black); }
+  .pill.yellow { background:var(--yellow); border-color:var(--yellow); color:var(--black); }
+  .pill.pink { background:var(--pink); border-color:var(--black); color:var(--black); }
+  .pill.outline { background:transparent; color:var(--black); }
+
+  /* Button reference row — matches real UI buttons exactly */
+  .btn-row { display:flex; flex-wrap:wrap; gap:5px; margin:12px 0 20px; }
+  .btn-ref { border:2px solid var(--lime); background:transparent; color:var(--lime); font-family:'Space Grotesk',sans-serif; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; padding:5px 10px; display:flex; flex-direction:column; gap:3px; }
+  .btn-ref span { font-size:8px; font-weight:400; text-transform:none; letter-spacing:0; color:var(--mid); }
+  .btn-ref.yellow { border-color:var(--yellow); color:var(--yellow); }
+  .btn-ref.pink { background:var(--pink); border-color:var(--black); color:var(--black); }
+
+  /* Pass card mockup */
+  .pass-card-mock { border:2px solid var(--black); margin-bottom:4px; max-width:400px; }
+  .pass-card-mock-head { background:var(--black); color:var(--white); padding:7px 12px; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; display:flex; align-items:center; gap:8px; }
+  .pass-card-mock-head .drag { color:var(--mid); font-size:12px; }
+  .pass-card-mock-head .swatch { width:12px; height:12px; border:1.5px solid rgba(255,255,255,.3); border-radius:0; }
+  .pass-card-mock-head .btns { margin-left:auto; display:flex; gap:4px; }
+  .pass-card-mock-head .btn-sm { border:1.5px solid rgba(255,255,255,.2); background:transparent; color:rgba(255,255,255,.6); font-size:8px; padding:1px 5px; font-family:'Space Grotesk',sans-serif; font-weight:700; }
+  .section-toggle { width:100%; background:var(--black); border:none; border-top:1px solid rgba(255,255,255,.08); color:rgba(255,255,255,.7); font-family:'Space Grotesk',sans-serif; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; padding:7px 12px; text-align:left; display:flex; align-items:center; gap:6px; cursor:default; }
+  .section-toggle .tag { color:var(--lime); font-weight:400; text-transform:none; letter-spacing:0; font-size:8px; margin-left:auto; }
+
+  /* Split bar mockup */
+  .split-bar-mock { border:2px solid var(--black); height:20px; position:relative; overflow:hidden; max-width:300px; margin:8px 0 4px; }
+  .split-bar-mock-a { position:absolute; top:0; left:0; height:100%; background:var(--lime); }
+  .split-bar-mock-b { position:absolute; top:0; right:0; height:100%; background:var(--yellow); }
+  .split-bar-mock-handle { position:absolute; top:50%; transform:translate(-50%,-50%); width:6px; height:16px; background:var(--black); }
+  .split-bar-row { display:flex; align-items:center; gap:8px; margin-bottom:4px; }
+  .split-bar-axis { font-size:8px; font-weight:700; text-transform:uppercase; color:var(--mid); width:14px; }
+
+  /* Section cards */
+  .section-card { border:2px solid var(--black); margin-bottom:4px; }
+  .section-card-head { background:var(--black); color:var(--white); padding:10px 16px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; display:flex; align-items:center; justify-content:space-between; }
+  .section-card-head .tag { font-size:9px; color:var(--lime); font-weight:400; text-transform:none; letter-spacing:0; }
+  .section-card-body { padding:16px; background:var(--white); }
+  .section-card-body p { margin-bottom:8px; } .section-card-body p:last-child { margin-bottom:0; }
+
+  /* Tables */
+  table { width:100%; border-collapse:collapse; margin:12px 0 4px; font-size:13px; }
+  th { text-align:left; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; padding:8px 12px; background:var(--black); color:var(--white); }
+  td { padding:9px 12px; border-bottom:1px solid rgba(0,0,0,.1); vertical-align:top; background:var(--white); }
+  tr:last-child td { border-bottom:none; }
+  td:first-child { font-weight:700; white-space:nowrap; width:160px; }
+  tr:nth-child(even) td { background:#ece8da; }
+
+  /* Callouts */
+  .callout { border-left:4px solid var(--black); background:var(--white); padding:14px 16px; margin:16px 0 20px; max-width:620px; }
+  .callout.lime { border-color:var(--lime); } .callout.yellow { border-color:var(--yellow); } .callout.pink { border-color:var(--pink); }
+  .callout p:last-child { margin-bottom:0; }
+  .callout-label { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; margin-bottom:6px; }
+  .callout.lime .callout-label { color:var(--lime); } .callout.yellow .callout-label { color:var(--mid); } .callout.pink .callout-label { color:var(--pink); }
+
+  /* Phase grid */
+  .phase-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:4px; margin:12px 0 4px; }
+  .phase-cell { background:var(--paper); border:2px solid var(--black); padding:8px 4px; text-align:center; }
+  .phase-cell .num { font-size:18px; font-weight:700; display:block; line-height:1; }
+  .phase-cell .name { font-size:8px; text-transform:uppercase; letter-spacing:.06em; color:var(--mid); display:block; margin-top:3px; }
+  .phase-cell.active { background:var(--lime); }
+
+  /* XY pad mockup */
+  .xy-pad-mock { width:140px; height:140px; border:2px solid var(--black); background:var(--white); position:relative; margin:8px 0; }
+  .xy-pad-mock .cursor { position:absolute; width:10px; height:10px; background:var(--lime); border:2px solid var(--black); transform:translate(-50%,-50%); top:30%; left:60%; }
+  .xy-pad-mock .ch { position:absolute; left:0; right:0; height:1px; background:rgba(0,200,160,.3); top:30%; }
+  .xy-pad-mock .cv { position:absolute; top:0; bottom:0; width:1px; background:rgba(0,200,160,.3); left:60%; }
+  .xy-pad-mock .lock { position:absolute; top:3px; right:3px; font-size:7px; font-weight:700; border:1.5px solid var(--mid); padding:1px 4px; color:var(--mid); background:var(--white); }
+  .xy-pad-mock .xlbl { position:absolute; bottom:2px; left:50%; transform:translateX(-50%); font-size:7px; color:var(--mid); font-weight:700; }
+  .xy-pad-mock .ylbl { position:absolute; top:50%; left:2px; transform:translateY(-50%) rotate(-90deg); font-size:7px; color:var(--mid); font-weight:700; }
+
+  hr { border:none; border-top:2px solid var(--black); margin:48px 0; }
+  /* ── KEYBOARD SHORTCUTS ── */
+  .sc-group { margin-bottom:28px; max-width:560px; }
+  .sc-group-label { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.12em; color:var(--mid); padding-bottom:8px; border-bottom:2px solid var(--black); margin-bottom:4px; }
+  .sc-row { display:flex; align-items:center; gap:16px; padding:8px 0; border-bottom:1px solid rgba(0,0,0,.06); }
+  .sc-row:last-child { border-bottom:none; }
+  .sc-keys { display:flex; align-items:center; gap:4px; min-width:180px; flex-shrink:0; }
+  kbd { display:inline-block; background:var(--black); color:var(--white); font-family:'Space Grotesk',sans-serif; font-size:10px; font-weight:700; padding:4px 8px; border-radius:0; letter-spacing:.04em; white-space:nowrap; }
+  .sc-plus { font-size:10px; color:var(--mid); font-weight:700; }
+  .sc-desc { font-size:13px; color:var(--black); }
+  .sc-alt { font-size:11px; color:var(--mid); margin-left:6px; }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- LEFT NAV -->
+  <nav class="sidenav">
+    <div class="sidenav-logo">
+      <span class="mark">User Manual</span>
+      <span class="title">Harmonograph</span>
+      <a class="back" href="index.html">← Back to app</a>
+    </div>
+    <div class="nav-list">
+      <div class="nav-group-label">Overview</div>
+      <a class="nav-link active" href="#what"><span class="dot dot-white"></span>What is it?</a>
+      <a class="nav-link" href="#header"><span class="dot dot-white"></span>Header</a>
+      <a class="nav-link" href="#paper"><span class="dot dot-white"></span>Paper &amp; Margin</a>
+
+      <div class="nav-group-label">Pen Passes</div>
+      <a class="nav-link" href="#passes"><span class="dot dot-lime"></span>Overview</a>
+      <a class="nav-link" href="#pen"><span class="dot dot-lime"></span>PEN</a>
+      <a class="nav-link" href="#shape"><span class="dot dot-lime"></span>SHAPE</a>
+      <a class="nav-link" href="#phases"><span class="dot dot-lime"></span>PHASES</a>
+      <a class="nav-link" href="#transform"><span class="dot dot-lime"></span>TRANSFORM</a>
+
+      <div class="nav-group-label">Controls</div>
+      <a class="nav-link" href="#weird"><span class="dot dot-pink"></span>Let's get weird...</a>
+      <a class="nav-link" href="#export"><span class="dot dot-yellow"></span>Export for plotting</a>
+      <a class="nav-link" href="#shortcuts"><span class="dot dot-white"></span>Shortcuts</a>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="page-header">
+      <div>
+        <div class="sub">User Manual</div>
+        <h1>Harmonograph</h1>
+      </div>
+      <div class="desc">Pen plotter art<br>generator</div>
+    </div>
+
+    <div class="content">
+
+      <!-- WHAT -->
+      <div class="section" id="what">
+        <h2 class="black">What is a Harmonograph?</h2>
+        <p>A harmonograph is a mechanical device that uses pendulums to draw geometric figures. As the pendulums swing in different directions and at different frequencies, the pen traces out <strong>Lissajous curves</strong> — intricate, mathematically beautiful shapes ideal for pen plotter art.</p>
+        <p>This app simulates a rotary harmonograph with two pairs of oscillating rotors per pass, giving you precise control over shape, symmetry, and drawing style across multiple independent layers.</p>
+      </div>
+
+      <!-- HEADER -->
+      <div class="section" id="header">
+        <h2 class="black">Header Buttons</h2>
+        <p>The top bar gives you access to history, file management, sharing, and export.</p>
+        <table style="max-width:560px;margin:12px 0 20px;">
+          <tr><th>Button</th><th>What it does</th></tr>
+          <tr><td>← Undo</td><td>Step back through edit history</td></tr>
+          <tr><td>Redo →</td><td>Step forward through edit history</td></tr>
+          <tr><td>↓ Export</td><td>Save current state as a JSON file</td></tr>
+          <tr><td>↑ Import</td><td>Load a previously exported JSON file</td></tr>
+          <tr><td>⬡ Share</td><td>Encode full state into URL and copy to clipboard</td></tr>
+          <tr><td>↓ SVG</td><td>Export drawing as SVG for pen plotter</td></tr>
+        </table>
+        <div class="callout lime">
+          <div class="callout-label">Tip — Sharing</div>
+          <p>The URL updates live as you work. <span class="pill lime">⬡ Share</span> copies it to clipboard — anyone with the link opens the exact same drawing.</p>
+        </div>
+      </div>
+
+      <!-- PAPER -->
+      <div class="section" id="paper">
+        <h2 class="black">Paper &amp; Margin</h2>
+        <p>Sets output paper size, margin, and background color. The <strong>Seed</strong> controls oscillator starting positions — small changes can produce dramatically different drawings.</p>
+      </div>
+
+      <hr>
+
+      <!-- PASSES -->
+      <div class="section" id="passes">
+        <h2 class="lime">Pen Passes</h2>
+        <p>Each pass is an independent drawing layer. Add as many as you like, reorder by dragging the <strong>⠿</strong> handle, and use solo or mute to isolate layers while working.</p>
+
+        <div class="pass-card-mock">
+          <div class="pass-card-mock-head">
+            <span class="drag">⠿</span>
+            <div class="swatch" style="background:#00c8a0;"></div>
+            Pass 1
+            <div class="btns">
+              <button class="btn-sm">S</button>
+              <button class="btn-sm">●</button>
+              <button class="btn-sm">RND</button>
+              <button class="btn-sm">×</button>
+            </div>
+          </div>
+          <div class="section-toggle">▸ PEN <span class="tag">Color · Weight · Opacity · Density</span></div>
+          <div class="section-toggle">▸ SHAPE <span class="tag">Ratio · Detune · Amplitude</span></div>
+          <div class="section-toggle">▸ PHASES <span class="tag">1×</span></div>
+          <div class="section-toggle">▸ TRANSFORM</div>
+        </div>
+
+        <div class="callout lime">
+          <div class="callout-label">Canvas interaction</div>
+          <p>Click a pass card header to select it. A bounding box appears on the canvas — drag <strong>corners</strong> to scale, the <strong>circle above</strong> to rotate (snaps to 45°), <strong>inside</strong> to move. A pixel preview shows during drag; the full render commits on release.</p>
+        </div>
+      </div>
+
+      <!-- PEN -->
+      <div class="section" id="pen">
+        <div class="section-card">
+          <div class="section-card-head">▾ PEN <span class="tag">Color · Line weight · Opacity · Density</span></div>
+          <div class="section-card-body">
+            <table>
+              <tr><th>Control</th><th>What it does</th></tr>
+              <tr><td>Color</td><td>Ink color for this pass. Click the swatch to open the color picker.</td></tr>
+              <tr><td>Line weight</td><td>Stroke width in mm. Use the pen picker to match a real Micron or Staedtler pen size.</td></tr>
+              <tr><td>Opacity</td><td>0–100%. Layering passes at lower opacity creates depth and optical blending.</td></tr>
+              <tr><td>Density</td><td>How densely the curve is drawn. 1–100 logarithmic scale — most interesting range is 1–50. Higher values produce dense hatching.</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SHAPE -->
+      <div class="section" id="shape">
+        <div class="section-card">
+          <div class="section-card-head">▾ SHAPE <span class="tag">Ratio pad · Detune X/Y · Amplitude</span></div>
+          <div class="section-card-body">
+            <p>Controls the mathematical curve using the <strong>XY ratio pad</strong>. Drag to choose frequency ratios for X and Y oscillators. Snaps to ratio intersections with magnetic pull, floats freely between for detuned shapes.</p>
+
+            <div class="xy-pad-mock">
+              <div class="ch"></div>
+              <div class="cv"></div>
+              <div class="cursor"></div>
+              <span class="lock">LINK</span>
+              <span class="xlbl">X ratio</span>
+              <span class="ylbl">Y ratio</span>
+            </div>
+
+            <table style="margin-top:12px;">
+              <tr><th>Control</th><th>What it does</th></tr>
+              <tr><td>XY Ratio pad</td><td>X axis = X oscillator ratio, Y axis = Y oscillator ratio. Drag to explore.</td></tr>
+              <tr><td>LINK toggle</td><td>Locks the X/Y ratio interval — dragging moves both axes together.</td></tr>
+              <tr><td>Detune X / Y</td><td>Slightly offsets frequency, causing the shape to slowly rotate or spiral.</td></tr>
+            </table>
+
+            <p style="margin-top:16px;font-size:13px;font-weight:700;">Amplitude</p>
+            <p style="font-size:13px;">The two rotors on each axis share their amplitude — drag the split bar to balance them. Left segment is R1 (X) or R3 (Y), right segment is R2 (X) or R4 (Y).</p>
+            <div class="split-bar-row">
+              <div class="split-bar-axis">X</div>
+              <div class="split-bar-mock" style="flex:1;">
+                <div class="split-bar-mock-a" style="width:65%;"></div>
+                <div class="split-bar-mock-b" style="width:35%;"></div>
+                <div class="split-bar-mock-handle" style="left:65%;"></div>
+              </div>
+            </div>
+            <div class="split-bar-row">
+              <div class="split-bar-axis">Y</div>
+              <div class="split-bar-mock" style="flex:1;">
+                <div class="split-bar-mock-a" style="width:65%;"></div>
+                <div class="split-bar-mock-b" style="width:35%;"></div>
+                <div class="split-bar-mock-handle" style="left:65%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHASES -->
+      <div class="section" id="phases">
+        <div class="section-card">
+          <div class="section-card-head">▾ PHASES <span class="tag">Rotational symmetry 1–12</span></div>
+          <div class="section-card-body">
+            <p>Controls rotational symmetry using a <strong>radial dial</strong>. Drag around the dial to select a phase count. The inner ring previews the symmetry slices live.</p>
+            <div class="phase-grid">
+              <div class="phase-cell"><span class="num">1</span><span class="name">None</span></div>
+              <div class="phase-cell"><span class="num">2</span><span class="name">Bilateral</span></div>
+              <div class="phase-cell"><span class="num">3</span><span class="name">Trefoil</span></div>
+              <div class="phase-cell active"><span class="num">4</span><span class="name">Square</span></div>
+              <div class="phase-cell"><span class="num">5</span><span class="name">Pentagon</span></div>
+              <div class="phase-cell"><span class="num">6</span><span class="name">Hexagon</span></div>
+              <div class="phase-cell"><span class="num">7</span><span class="name">Star</span></div>
+              <div class="phase-cell"><span class="num">8</span><span class="name">Octagon</span></div>
+              <div class="phase-cell"><span class="num">9</span><span class="name">Nonagon</span></div>
+              <div class="phase-cell"><span class="num">10</span><span class="name">Decagon</span></div>
+              <div class="phase-cell"><span class="num">11</span><span class="name">Hendeca.</span></div>
+              <div class="phase-cell"><span class="num">12</span><span class="name">Dodeca.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TRANSFORM -->
+      <div class="section" id="transform">
+        <div class="section-card" style="margin-bottom:32px;">
+          <div class="section-card-head">▾ TRANSFORM <span class="tag">Offset · Scale · Rotation</span></div>
+          <div class="section-card-body">
+            <p>Numeric controls for offset X/Y, scale, and rotation — the same transforms available via the canvas handles. Use handles for fast expressive control, numeric inputs for precision.</p>
+            <table>
+              <tr><th>Control</th><th>What it does</th></tr>
+              <tr><td>Phase offset</td><td>Global rotation of the oscillator start position.</td></tr>
+              <tr><td>X / Y Offset</td><td>Translates the pass on the canvas.</td></tr>
+              <tr><td>Scale</td><td>Scales the pass relative to centre.</td></tr>
+              <tr><td>Rotation °</td><td>Rotates the pass in degrees.</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <hr>
+
+      <!-- WEIRD -->
+      <div class="section" id="weird">
+        <h2 class="pink">Let's Get Weird...</h2>
+        <div class="btn-ref pink" style="display:inline-flex;margin-bottom:16px;">Let's get weird...<span>Randomises all unlocked parameters</span></div>
+        <p>Triggers a slot-machine animation that randomises all unlocked parameters across all passes. Use the <span class="pill outline">Lock</span> toggles on each pass card to protect specific values — lock color to keep your palette while randomising shapes.</p>
+      </div>
+
+      <hr>
+
+      <!-- EXPORT -->
+      <div class="section" id="export">
+        <h2 class="yellow">Export for Plotting</h2>
+        <p>Click <span class="pill yellow">↓ SVG</span> to export. The SVG uses real-world millimetre coordinates matching the selected paper size — loads at the correct scale in Inkscape, LightBurn, or your plotter software.</p>
+        <div class="callout yellow">
+          <div class="callout-label">Tip</div>
+          <p>Set line weight to match your actual pen (e.g. Micron 03 = 0.35mm) before exporting. This determines how the SVG stroke width is written.</p>
+        </div>
+      </div>
+
+      <hr>
+
+      <!-- SHORTCUTS -->
+      <div class="section" id="shortcuts">
+        <h2 class="black">Keyboard Shortcuts</h2>
+
+        <div class="sc-group">
+          <div class="sc-group-label">History</div>
+          <div class="sc-row"><div class="sc-keys"><kbd>Ctrl</kbd><span class="sc-plus">+</span><kbd>Z</kbd></div><div class="sc-desc">Undo</div></div>
+          <div class="sc-row"><div class="sc-keys"><kbd>Ctrl</kbd><span class="sc-plus">+</span><kbd>Y</kbd></div><div class="sc-desc">Redo <span class="sc-alt">also Ctrl+Shift+Z</span></div></div>
+        </div>
+
+        <div class="sc-group">
+          <div class="sc-group-label">Pass selection</div>
+          <div class="sc-row"><div class="sc-keys"><kbd>Tab</kbd></div><div class="sc-desc">Select next pass</div></div>
+          <div class="sc-row"><div class="sc-keys"><kbd>Shift</kbd><span class="sc-plus">+</span><kbd>Tab</kbd></div><div class="sc-desc">Select previous pass</div></div>
+          <div class="sc-row"><div class="sc-keys"><kbd>Esc</kbd></div><div class="sc-desc">Deselect active pass</div></div>
+          <div class="sc-row"><div class="sc-keys"><kbd>M</kbd></div><div class="sc-desc">Mute / unmute selected pass</div></div>
+          <div class="sc-row"><div class="sc-keys"><kbd>S</kbd></div><div class="sc-desc">Solo / unsolo selected pass</div></div>
+          <div class="sc-row"><div class="sc-keys"><kbd>Del</kbd></div><div class="sc-desc">Remove selected pass</div></div>
+          <div class="sc-row"><div class="sc-keys"><kbd>Ctrl</kbd><span class="sc-plus">+</span><kbd>D</kbd></div><div class="sc-desc">Duplicate selected pass</div></div>
+          <div class="sc-row"><div class="sc-keys"><kbd>Ctrl</kbd><span class="sc-plus">+</span><kbd>Shift</kbd><span class="sc-plus">+</span><kbd>N</kbd></div><div class="sc-desc">Add new pass</div></div>
+        </div>
+
+        <div class="sc-group">
+          <div class="sc-group-label">Transform — selected pass</div>
+          <div class="sc-row"><div class="sc-keys"><kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd></div><div class="sc-desc">Nudge position <span class="sc-alt">hold Shift for larger steps</span></div></div>
+          <div class="sc-row"><div class="sc-keys"><kbd>[</kbd><kbd>]</kbd></div><div class="sc-desc">Rotate −1° / +1° <span class="sc-alt">Shift = 5°</span></div></div>
+          <div class="sc-row"><div class="sc-keys"><kbd>+</kbd><kbd>−</kbd></div><div class="sc-desc">Scale up / down <span class="sc-alt">Shift = larger step</span></div></div>
+        </div>
+
+        <div class="sc-group">
+          <div class="sc-group-label">Global</div>
+          <div class="sc-row"><div class="sc-keys"><kbd>Space</kbd></div><div class="sc-desc">Let's get weird — randomise all passes</div></div>
+          <div class="sc-row"><div class="sc-keys"><kbd>R</kbd></div><div class="sc-desc">Reset to defaults</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// Highlight active nav link on scroll
+const links = document.querySelectorAll('.nav-link');
+const sections = document.querySelectorAll('.section');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      links.forEach(l => l.classList.remove('active'));
+      const active = document.querySelector(`.nav-link[href="#${e.target.id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { rootMargin:'-20% 0px -70% 0px' });
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
