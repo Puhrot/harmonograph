@@ -52,7 +52,7 @@ package.json                   # Metadata only — no dependencies
 README.md                      # Feature overview and quick start
 CHANGELOG.md                   # Release notes
 LICENSE                        # MIT
-Harmonograph_User_Manual.pdf   # Complete user guide
+manual.html                    # User manual (HTML, wiki-style for GitHub Pages)
 docs/
   ARCHITECTURE.md              # Code structure and state objects
   CONTROLS.md                  # Parameter reference and keyboard shortcuts
