@@ -1071,21 +1071,23 @@ function buildInstancesUI(){
 <!-- PEN SECTION -->
         <button class="inst-shape-toggle" id="penbtn-${i}" onclick="toggleSection(${i},'pen')">${inst.penOpen?'▾':'▸'} PEN</button>
         <div class="inst-shape-body ${inst.penOpen?'open':''}" id="pen-${i}">
+          <!-- COLOR + TRANSPARENCY INLINE -->
           <div class="ctrl">
-            <div class="ctrl-head"><span class="ctrl-label">Color</span></div>
+            <div class="ctrl-head"><span class="ctrl-label">Color</span><span style="font-size:8px;color:var(--mid);font-weight:400;">Transparency</span></div>
             <div style="display:flex;align-items:center;gap:7px;margin-top:3px;">
-              <div id="icolor-swatch-${i}" style="width:20px;height:20px;border:2px solid #000;cursor:pointer;background:${inst.color||'#000000'}" onclick="document.getElementById('icolor-${i}').click()"></div>
-              <span style="font-family:'Courier New',monospace;font-size:9px;color:var(--mid)" id="icolor-hex-${i}">${inst.color||'#000000'}</span>
+              <div id="icolor-swatch-${i}" style="width:20px;height:20px;border:2px solid #000;cursor:pointer;flex-shrink:0;background:${inst.color||'#000000'}" onclick="document.getElementById('icolor-${i}').click()"></div>
+              <span style="font-family:'Courier New',monospace;font-size:9px;color:var(--mid);flex-shrink:0;" id="icolor-hex-${i}">${inst.color||'#000000'}</span>
               <input type="color" id="icolor-${i}" value="${inst.color||'#000000'}" onchange="setInstColor(${i},this.value)">
+              <input type="range" id="ialphasl-${i}" min="1" max="100" step="1" value="${Math.round((inst.alpha||191)/255*100)}" oninput="setInstAlpha(${i},this.value)" style="flex:1;margin-bottom:0;" title="Transparency">
+              <input type="number" class="ctrl-val-input" id="ialpha-${i}" value="${Math.round((inst.alpha||191)/255*100)}" min="1" max="100" step="1" onchange="setInstAlpha(${i},this.value)" style="width:28px;"><span class="unit-lbl">%</span>
             </div>
           </div>
+          <!-- STROKE -->
           <div class="ctrl">
-            <div class="ctrl-head"><span class="ctrl-label">Line weight</span></div>
-            <div style="display:flex;align-items:center;gap:5px;margin-top:3px;">
-              <input type="number" class="ctrl-val-input" id="isw-${i}" value="${(inst.strokeW||0.35).toFixed(2)}" min="0.05" max="3" step="0.05" style="width:44px;" onchange="setInstStrokeW(${i},this.value)">
-              <span class="unit-lbl">mm</span>
-              <select id="ipen-${i}" onchange="setInstStrokeW(${i},this.value)" style="flex:1;margin-bottom:0;font-size:8px;padding:2px 4px;">
-                <option value="">— pick pen —</option>
+            <div class="ctrl-head"><span class="ctrl-label">Stroke</span></div>
+            <div style="margin-top:3px;">
+              <select id="ipen-${i}" onchange="onPenPickerChange(${i},this.value)" style="width:100%;margin-bottom:4px;font-size:8px;padding:2px 4px;">
+                <option value="custom" ${![0.20,0.25,0.30,0.35,0.45,0.50,0.60,0.80,0.10,0.70,1.00].includes(parseFloat((inst.strokeW||0.35).toFixed(2)))?'selected':''}>Custom…</option>
                 <optgroup label="Micron">
                   <option value="0.20" ${(inst.strokeW||0.35).toFixed(2)==='0.20'?'selected':''}>Micron 005 — 0.20mm</option>
                   <option value="0.25" ${(inst.strokeW||0.35).toFixed(2)==='0.25'?'selected':''}>Micron 01 — 0.25mm</option>
@@ -1105,10 +1107,12 @@ function buildInstancesUI(){
                   <option value="1.00" ${(inst.strokeW||0.35).toFixed(2)==='1.00'?'selected':''}>Staedtler 1.0mm</option>
                 </optgroup>
               </select>
+              <div id="ipen-custom-${i}" style="display:${![0.20,0.25,0.30,0.35,0.45,0.50,0.60,0.80,0.10,0.70,1.00].includes(parseFloat((inst.strokeW||0.35).toFixed(2)))?'flex':'none'};align-items:center;gap:5px;">
+                <input type="number" class="ctrl-val-input" id="isw-${i}" value="${(inst.strokeW||0.35).toFixed(2)}" min="0.05" max="3" step="0.05" style="width:44px;" onchange="setInstStrokeW(${i},this.value)">
+                <span class="unit-lbl">mm</span>
+              </div>
             </div>
           </div>
-          <div class="ctrl"><div class="ctrl-head"><span class="ctrl-label">Opacity</span><input type="number" class="ctrl-val-input" id="ialpha-${i}" value="${Math.round((inst.alpha||191)/255*100)}" min="1" max="100" step="1" onchange="setInstAlpha(${i},this.value)"><span class="unit-lbl">%</span></div><input type="range" id="ialphasl-${i}" min="1" max="100" step="1" value="${Math.round((inst.alpha||191)/255*100)}" oninput="setInstAlpha(${i},this.value)"></div>
-          <div class="ctrl"><div class="ctrl-head"><span class="ctrl-label">Density</span><input type="number" class="ctrl-val-input" id="idens-${i}" value="${inst.density||50}" min="1" max="100" step="1" style="width:36px;" onchange="setInstDensity(${i},this.value)"></div><input type="range" id="idenssl-${i}" min="1" max="100" step="1" value="${inst.density||50}" oninput="setInstDensity(${i},this.value)"></div>
         </div>
         <!-- SHAPE SECTION -->
         <button class="inst-shape-toggle" id="shapebtn-${i}" onclick="toggleSection(${i},'shape')">${isOpen?'▾':'▸'} SHAPE &mdash; X:${RATIOS[inst.ratioX].label} Y:${RATIOS[inst.ratioY].label}</button>
@@ -1130,8 +1134,10 @@ function buildInstancesUI(){
             <div class="ctrl-head"><span class="ctrl-label">Detune Y</span><input type="number" class="ctrl-val-input" id="idetY-${i}" value="${(inst.detuneY!=null?inst.detuneY:inst.detune).toFixed(4)}" min="0" max="0.0125" step="0.0002" onchange="setInstDetuneY(${i},this.value);document.getElementById('idetYslider-'+${i}).value=this.value;"></div>
             <input type="range" id="idetYslider-${i}" min="0" max="0.0125" step="0.0002" value="${inst.detuneY!=null?inst.detuneY:inst.detune}" oninput="setInstDetuneY(${i},this.value)">
           </div>
-          <!-- AMPLITUDE SPLIT BARS -->
+          <!-- DETAIL (density) + AMPLITUDE SPLIT BARS -->
           <div class="amp-split-wrap">
+            <div style="font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--mid);margin-bottom:3px;">Detail</div>
+            <div class="ctrl" style="margin-bottom:8px;"><div class="ctrl-head"><input type="number" class="ctrl-val-input" id="idens-${i}" value="${inst.density||50}" min="1" max="100" step="1" style="width:36px;" onchange="setInstDensity(${i},this.value)"></div><input type="range" id="idenssl-${i}" min="1" max="100" step="1" value="${inst.density||50}" oninput="setInstDensity(${i},this.value)"></div>
             <div style="font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--mid);margin-bottom:4px;">Amplitude</div>
             <div class="amp-split-row">
               <div class="amp-split-axis">X</div>
@@ -1376,16 +1382,28 @@ function setInstDensity(i,v){
   const sl=document.getElementById(`idenssl-${i}`);if(sl)sl.value=instances[i].density;
   redraw();
 }
+function onPenPickerChange(i,v){
+  if(v==='custom'){
+    const wrap=document.getElementById('ipen-custom-'+i);
+    if(wrap)wrap.style.display='flex';
+    return;
+  }
+  const wrap=document.getElementById('ipen-custom-'+i);
+  if(wrap)wrap.style.display='none';
+  setInstStrokeW(i,v);
+}
 function setInstStrokeW(i,v){
   const fv=parseFloat(v); if(isNaN(fv)) return;
   instances[i].strokeW=fv;
   const el=document.getElementById(`isw-${i}`);if(el)el.value=fv.toFixed(2);
   const sel=document.getElementById(`ipen-${i}`);
+  const customWrap=document.getElementById(`ipen-custom-${i}`);
   if(sel){
     const target=fv.toFixed(2);
     let matched=false;
     for(let o=0;o<sel.options.length;o++){if(parseFloat(sel.options[o].value).toFixed(2)===target){sel.selectedIndex=o;matched=true;break;}}
-    if(!matched)sel.selectedIndex=0;
+    if(!matched){sel.value='custom';if(customWrap)customWrap.style.display='flex';}
+    else{if(customWrap)customWrap.style.display='none';}
   }
   redraw();
 }
