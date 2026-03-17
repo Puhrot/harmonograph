@@ -974,7 +974,7 @@ function drawPhaseDial(i){
     ctx.strokeStyle=active?lime:mid;ctx.lineWidth=active?2:1;ctx.stroke();
     const lx=CX+Math.cos(a)*(R+13),ly=CY+Math.sin(a)*(R+13);
     ctx.fillStyle=active?black:mid;
-    ctx.font=(active?'700':'400')+' '+(active?10:8.5)+"px 'Space Grotesk',sans-serif";
+    ctx.font=(active?'700':'400')+' '+(active?11:9)+"px 'Space Grotesk',sans-serif";
     ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.fillText(p,lx,ly);
   });
@@ -986,11 +986,11 @@ function drawPhaseDial(i){
   ctx.beginPath();ctx.arc(hx,hy,HR,0,Math.PI*2);
   ctx.fillStyle=lime;ctx.fill();ctx.strokeStyle=black;ctx.lineWidth=2;ctx.stroke();
   ctx.fillStyle=black;
-  ctx.font='bold '+(W*0.08)+"px 'Space Grotesk',sans-serif";
+  ctx.font='bold '+(W*0.10)+"px 'Space Grotesk',sans-serif";
   ctx.textAlign='center';ctx.textBaseline='middle';
   ctx.fillText(ph,CX,CY-W*0.015);
-  ctx.font=(W*0.04)+"px 'Space Grotesk',sans-serif";
-  ctx.fillStyle=mid;ctx.fillText('phases',CX,CY+W*0.05);
+  ctx.font='700 '+(W*0.05)+"px 'Space Grotesk',sans-serif";
+  ctx.fillStyle=mid;ctx.fillText('phases',CX,CY+W*0.06);
 }
 
 function buildInstDials(){instances.forEach(function(_,i){drawPhaseDial(i);});}
