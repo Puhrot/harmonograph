@@ -24,7 +24,7 @@ body { font-family:'Space Grotesk',sans-serif; background:var(--bg); height:100v
 .top-header {
   background:var(--black);
   border-bottom:3px solid var(--black);
-  padding:0 20px; height:50px;
+  padding:8px 20px; min-height:50px;
   display:flex; align-items:center; gap:18px; flex-shrink:0;
 }
 .top-header h1 {
@@ -32,7 +32,7 @@ body { font-family:'Space Grotesk',sans-serif; background:var(--bg); height:100v
   color:var(--lime);
 }
 .top-header .sub {
-  font-size:8.5px; line-height:1.4; color:var(--yellow); max-width:420px;
+  font-size:12px; line-height:1.4; color:var(--yellow); max-width:600px;
   padding-left:0;
 }
 .header-actions {
@@ -41,7 +41,7 @@ body { font-family:'Space Grotesk',sans-serif; background:var(--bg); height:100v
 .hdr-btn, .hdr-label {
   padding:4px 10px; border:1.5px solid var(--lime); border-radius:0;
   background:transparent; color:var(--lime); cursor:pointer;
-  font-family:'Space Grotesk',sans-serif; font-size:9px; font-weight:700;
+  font-family:'Space Grotesk',sans-serif; font-size:10px; font-weight:700;
   letter-spacing:.05em; text-transform:uppercase; transition:all .1s;
   white-space:nowrap; display:inline-flex; align-items:center;
 }
@@ -56,7 +56,7 @@ body { font-family:'Space Grotesk',sans-serif; background:var(--bg); height:100v
 
 /* ── SIDEBAR ────────────────────────────────────── */
 .sidebar {
-  width:276px; flex-shrink:0;
+  width:300px; flex-shrink:0;
   background:var(--paper);
   padding:7px;
   overflow-y:auto;
@@ -74,17 +74,17 @@ body { font-family:'Space Grotesk',sans-serif; background:var(--bg); height:100v
 .sec-head.y  { background:var(--yellow); }
 .sec-head.l  { background:var(--lime); }
 .sec-head.w  { background:var(--white); }
-.sec-title { font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.14em; }
+.sec-title { font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; }
 .sec-body  { padding:7px; }
 
 /* ── CONTROLS ───────────────────────────────────── */
 .ctrl { margin-bottom:5px; }
 .ctrl-head { display:flex; justify-content:space-between; margin-bottom:2px; align-items:baseline; }
-.ctrl-label { font-size:9.5px; font-weight:700; }
-.ctrl-val   { font-family:'Courier New',monospace; font-size:9px; color:var(--mid); }
+.ctrl-label { font-size:13px; font-weight:700; }
+.ctrl-val   { font-family:'Courier New',monospace; font-size:12px; color:var(--mid); }
 .ctrl-val-input {
   width:44px; text-align:right;
-  font-family:'Courier New',monospace; font-size:9px; color:var(--black);
+  font-family:'Courier New',monospace; font-size:12px; color:var(--black);
   background:transparent; border:none; border-bottom:1px solid transparent;
   outline:none; padding:0 1px 0 0; cursor:text;
 }
@@ -131,7 +131,7 @@ select:focus { outline:none; }
 .btn {
   width:100%; padding:7px; border:2px solid var(--black); border-radius:0;
   cursor:pointer; font-family:'Space Grotesk',sans-serif;
-  font-size:10.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+  font-size:12.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
   transition:all .1s; margin-bottom:4px;
 }
 .btn-y { background:var(--yellow); color:var(--black); }
@@ -143,7 +143,7 @@ select:focus { outline:none; }
 .btn-sm {
   padding:3px 8px;
   border:2px solid var(--black); border-radius:0; cursor:pointer;
-  font-size:9px; font-family:'Space Grotesk',sans-serif; font-weight:700;
+  font-size:10px; font-family:'Space Grotesk',sans-serif; font-weight:700;
   text-transform:uppercase; letter-spacing:.04em;
   background:var(--white); color:var(--black); transition:all .1s;
 }
@@ -152,42 +152,49 @@ select:focus { outline:none; }
 /* ── TRANSFORM ROW ──────────────────────────────── */
 .ctrl-row-2 { display:grid; grid-template-columns:1fr 1fr; gap:4px; margin-bottom:5px; }
 .ctrl-mini .ctrl-head { margin-bottom:1px; }
-.ctrl-mini .ctrl-label { font-size:8.5px; }
-.ctrl-mini .ctrl-val   { font-size:8px; }
+.ctrl-mini .ctrl-label { font-size:12px; }
+.ctrl-mini .ctrl-val   { font-size:12px; }
 
-.unit-lbl { font-size:8px; color:var(--mid); font-family:'Space Grotesk',sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:.05em; }
+.unit-lbl { font-size:10px; color:var(--mid); font-family:'Space Grotesk',sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:.05em; }
 /* ── PHASES DIAL ─────────────────────────────────── */
 .phases-dial-wrap { position:relative; width:100%; aspect-ratio:1; cursor:grab; user-select:none; margin-bottom:4px; }
 .phases-dial-wrap canvas { position:absolute; top:0; left:0; width:100%; height:100%; }
-.phases-dial-readout { font-size:8px; font-weight:700; text-align:center; color:var(--mid); margin-bottom:2px; font-family:'Space Grotesk',sans-serif; letter-spacing:.05em; text-transform:uppercase; }
+.phases-dial-readout { font-size:13px; font-weight:700; text-align:center; color:var(--black); margin-bottom:3px; font-family:'Space Grotesk',sans-serif; letter-spacing:.08em; text-transform:uppercase; }
 
 /* ── AMPLITUDE SPLIT BARS ─────────────────────────── */
 .amp-split-wrap { margin-bottom:6px; }
 .amp-split-row { display:flex; align-items:center; gap:6px; margin-bottom:4px; }
-.amp-split-axis { font-size:8px; font-weight:700; text-transform:uppercase; color:var(--mid); width:16px; flex-shrink:0; }
+.amp-split-axis { font-size:11px; font-weight:700; text-transform:uppercase; color:var(--mid); width:18px; flex-shrink:0; }
 .amp-split-bar { flex:1; height:22px; background:var(--white); border:2px solid var(--black); position:relative; cursor:ew-resize; user-select:none; overflow:hidden; }
 .amp-split-a { position:absolute; top:0; left:0; height:100%; background:var(--lime); pointer-events:none; }
 .amp-split-b { position:absolute; top:0; right:0; height:100%; background:var(--yellow); pointer-events:none; }
 .amp-split-handle { position:absolute; top:50%; transform:translate(-50%,-50%); width:8px; height:18px; background:var(--black); cursor:ew-resize; z-index:10; pointer-events:none; }
-.amp-split-labels { display:flex; justify-content:space-between; font-size:7.5px; font-weight:700; color:var(--black); padding:0 4px; position:absolute; width:100%; top:50%; transform:translateY(-50%); pointer-events:none; }
+.amp-split-labels { display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:var(--black); padding:0 4px; position:absolute; width:100%; top:50%; transform:translateY(-50%); pointer-events:none; }
 
 /* ── XY RATIO PAD ───────────────────────────────── */
-.ratio-pad { position:relative; width:100%; aspect-ratio:1; background:var(--white); border:2px solid var(--black); cursor:crosshair; user-select:none; margin-bottom:5px; }
-.ratio-pad-cursor { position:absolute; width:12px; height:12px; background:var(--lime); border:2px solid var(--black); transform:translate(-50%,-50%); pointer-events:none; z-index:10; }
+.ratio-pad-wrap { display:flex; gap:3px; margin-bottom:5px; }
+.ratio-pad-ylbls { display:flex; flex-direction:column; justify-content:space-between; padding:4px 0; flex-shrink:0; }
+.ratio-pad-xlbls { display:flex; justify-content:space-between; padding:0 4px; margin-bottom:2px; margin-left:22px; }
+.ratio-pad-xlbl-ext { font-size:9px; font-weight:700; color:var(--mid); font-family:'Space Grotesk',sans-serif; text-align:center; flex:1; }
+.ratio-pad-ylbl-ext { font-size:9px; font-weight:700; color:var(--mid); font-family:'Space Grotesk',sans-serif; text-align:right; width:18px; flex-shrink:0; }
+.ratio-pad { position:relative; flex:1; aspect-ratio:1; background:var(--white); border:2px solid var(--black); cursor:crosshair; user-select:none; }
+.ratio-pad-cursor { position:absolute; width:10px; height:10px; background:var(--lime); border:2px solid var(--black); transform:translate(-50%,-50%); pointer-events:none; z-index:10; }
 .ratio-pad-ch { position:absolute; left:0; right:0; height:1px; background:rgba(0,200,160,0.3); pointer-events:none; z-index:5; }
 .ratio-pad-cv { position:absolute; top:0; bottom:0; width:1px; background:rgba(0,200,160,0.3); pointer-events:none; z-index:5; }
-.ratio-pad-dot { position:absolute; width:8px; height:8px; border:1.5px solid var(--mid); background:var(--white); transform:translate(-50%,-50%); z-index:6; transition:background .08s,border-color .08s; }
+.ratio-pad-dot { position:absolute; width:6px; height:6px; border:1.5px solid var(--mid); background:var(--white); transform:translate(-50%,-50%); z-index:6; transition:background .08s,border-color .08s; }
 .ratio-pad-dot.active { background:var(--lime); border-color:var(--black); }
-.ratio-pad-xlbl { position:absolute; font-size:7px; font-weight:700; color:var(--mid); transform:translateX(-50%); top:3px; font-family:'Space Grotesk',sans-serif; pointer-events:none; }
-.ratio-pad-ylbl { position:absolute; font-size:7px; font-weight:700; color:var(--mid); transform:translateY(-50%); left:3px; font-family:'Space Grotesk',sans-serif; pointer-events:none; }
-.ratio-pad-readout { font-size:8px; font-weight:700; text-align:center; color:var(--mid); margin-bottom:4px; font-family:'Space Grotesk',sans-serif; letter-spacing:.05em; }
+.ratio-pad-xlbl { display:none; }
+.ratio-pad-ylbl { display:none; }
+.ratio-pad-lock { position:absolute; bottom:3px; right:3px; z-index:20; padding:2px 6px; border:1.5px solid var(--mid); font-size:9px; font-family:'Space Grotesk',sans-serif; font-weight:700; background:var(--white); color:var(--mid); cursor:pointer; }
+.ratio-pad-lock.on { background:var(--yellow); border-color:var(--black); color:var(--black); }
+.ratio-pad-readout { font-size:12px; font-weight:700; text-align:center; color:var(--mid); margin-bottom:4px; font-family:'Space Grotesk',sans-serif; letter-spacing:.05em; }
 
 /* ── ROTOR TABS ─────────────────────────────────── */
 .tab-row { display:flex; gap:2px; margin-bottom:6px; }
 .tab {
   flex:1; padding:3px 2px;
   border:2px solid var(--black); border-radius:0; cursor:pointer;
-  font-size:8.5px; font-family:'Space Grotesk',sans-serif; font-weight:700;
+  font-size:10px; font-family:'Space Grotesk',sans-serif; font-weight:700;
   background:var(--white); text-align:center; text-transform:uppercase; transition:all .1s;
 }
 .tab:hover { background:#d8d2c2; }
@@ -195,47 +202,47 @@ select:focus { outline:none; }
 
 /* ── INSTANCE CARDS ─────────────────────────────── */
 .instance-card { border:2px solid var(--black); margin-bottom:6px; overflow:hidden; }
-.instance-head { display:flex; align-items:center; gap:3px; padding:3px 5px; border-bottom:2px solid var(--black); background:var(--white); min-width:0; overflow:hidden; cursor:pointer; }
-.instance-head:hover { background:var(--paper); }
-.instance-head.selected { background:var(--lime); }
-.instance-num { font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap; flex-shrink:0; }
+.instance-head { display:flex; align-items:center; gap:3px; padding:3px 5px; border-bottom:2px solid var(--black); min-width:0; overflow:hidden; cursor:pointer; transition:filter .1s; }
+.instance-head:hover { filter:brightness(1.1); }
+.instance-head.selected { outline:3px solid var(--lime); outline-offset:-3px; }
+.instance-num { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap; flex-shrink:0; }
 .color-swatch { width:16px; height:16px; border:2px solid var(--black); cursor:pointer; flex-shrink:0; }
 input[type=color] { width:0; height:0; opacity:0; position:absolute; pointer-events:none; }
 .inst-actions { margin-left:auto; display:flex; gap:2px; flex-shrink:0; align-items:center; }
 .inst-rnd {
-  padding:1px 5px;
+  padding:2px 6px;
   border:2px solid var(--black); border-radius:0;
-  font-size:8px; font-family:'Space Grotesk',sans-serif; font-weight:700;
+  font-size:10px; font-family:'Space Grotesk',sans-serif; font-weight:700;
   background:var(--white); cursor:pointer; transition:all .1s; flex-shrink:0;
 }
-.inst-rnd:hover { background:var(--lime); color:var(--black); border-color:var(--black); }
+.inst-rnd:hover { background:var(--yellow); color:var(--black); border-color:var(--black); }
 .inst-remove {
-  padding:1px 5px;
+  padding:2px 6px;
   border:2px solid var(--black); border-radius:0;
-  font-size:8px; font-family:'Space Grotesk',sans-serif; font-weight:700;
+  font-size:10px; font-family:'Space Grotesk',sans-serif; font-weight:700;
   background:var(--white); cursor:pointer; transition:all .1s;
 }
-.inst-remove:hover { background:#ff2222; color:#fff; border-color:#ff2222; }
+.inst-remove:hover { background:#ff69b4; color:#0a0a0a; border-color:#0a0a0a; }
 .inst-vis-btn, .inst-solo-btn, .inst-copy-btn {
-  padding:1px 4px;
+  padding:2px 5px;
   border:2px solid var(--black); border-radius:0;
-  font-size:9px; font-family:'Space Grotesk',sans-serif; font-weight:700;
+  font-size:10px; font-family:'Space Grotesk',sans-serif; font-weight:700;
   background:var(--white); cursor:pointer; transition:all .1s; flex-shrink:0;
 }
-.inst-vis-btn:hover { background:var(--mid); color:var(--white); }
+.inst-vis-btn:hover { background:var(--yellow); color:var(--black); border-color:var(--black); }
 .inst-vis-btn.dim { background:var(--mid); color:var(--white); border-color:var(--mid); }
 .inst-solo-btn:hover { background:var(--yellow); }
 .inst-solo-btn.active { background:var(--yellow); color:var(--black); }
-.inst-copy-btn:hover { background:var(--lime); color:var(--black); }
-.drag-handle { cursor:grab; color:var(--mid); font-size:11px; padding:0 1px 0 0; user-select:none; flex-shrink:0; }
+.inst-copy-btn:hover { background:var(--yellow); color:var(--black); }
+.drag-handle { cursor:grab; color:var(--mid); font-size:13px; padding:0 1px 0 0; user-select:none; flex-shrink:0; }
 
 /* ── LOCK BUTTONS ────────────────────────────────── */
 .lock-row { display:flex; gap:2px; flex-wrap:nowrap; margin-bottom:5px; align-items:center; overflow:hidden; }
-.lock-lbl { font-size:7px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--mid); margin-right:1px; flex-shrink:0; }
+.lock-lbl { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--mid); margin-right:1px; flex-shrink:0; }
 .lock-btn {
-  padding:1px 4px;
+  padding:2px 4px;
   border:1px solid var(--mid); border-radius:0;
-  font-size:7px; font-family:'Space Grotesk',sans-serif; font-weight:700;
+  font-size:10px; font-family:'Space Grotesk',sans-serif; font-weight:700; letter-spacing:0;
   background:var(--white); cursor:pointer; transition:all .1s; color:var(--mid);
   flex-shrink:0;
 }
@@ -246,7 +253,7 @@ input[type=color] { width:0; height:0; opacity:0; position:absolute; pointer-eve
 .asym-btn {
   padding:2px 6px; margin-bottom:3px;
   border:1.5px solid var(--mid); border-radius:0;
-  font-size:7.5px; font-family:'Space Grotesk',sans-serif; font-weight:700;
+  font-size:10px; font-family:'Space Grotesk',sans-serif; font-weight:700;
   background:var(--white); cursor:pointer; color:var(--mid); transition:all .1s;
 }
 .asym-btn:hover { border-color:var(--black); color:var(--black); }
@@ -259,7 +266,7 @@ input[type=color] { width:0; height:0; opacity:0; position:absolute; pointer-eve
 .inst-shape-toggle {
   width:100%; padding:3px 6px; margin-bottom:2px;
   border:2px solid var(--black); border-radius:0; cursor:pointer;
-  font-size:8.5px; font-family:'Space Grotesk',sans-serif; font-weight:700;
+  font-size:10px; font-family:'Space Grotesk',sans-serif; font-weight:700;
   text-transform:uppercase; letter-spacing:.06em;
   background:var(--lime); color:var(--black); text-align:left; transition:all .1s;
   line-height:1.2; min-height:22px; display:flex; align-items:center;
@@ -280,16 +287,16 @@ input[type=color] { width:0; height:0; opacity:0; position:absolute; pointer-eve
 /* ── PAPER INFO ─────────────────────────────────── */
 .paper-info {
   border:2px solid var(--black); padding:4px 8px;
-  font-size:9px; color:var(--mid); line-height:1.6; margin-bottom:4px;
+  font-size:12px; color:var(--mid); line-height:1.6; margin-bottom:4px;
   background:var(--white);
 }
 .paper-info strong { color:var(--black); font-weight:700; }
 .fit-wrap { width:100%; height:4px; background:#c8c2b2; border:1px solid #afa898; margin-bottom:3px; overflow:hidden; }
 .fit-bar  { height:100%; transition:width .2s,background .2s; background:var(--black); }
-.fit-label { font-size:8.5px; color:var(--mid); display:flex; justify-content:space-between; margin-bottom:4px; }
+.fit-label { font-size:12px; color:var(--mid); display:flex; justify-content:space-between; margin-bottom:4px; }
 .warn-box {
   border:2px solid var(--black); background:var(--yellow);
-  padding:4px 8px; font-size:8.5px; font-weight:700; margin-bottom:5px; display:none;
+  padding:4px 8px; font-size:12px; font-weight:700; margin-bottom:5px; display:none;
 }
 .warn-box.on { display:block; }
 
@@ -322,7 +329,7 @@ input[type=color] { width:0; height:0; opacity:0; position:absolute; pointer-eve
 }
 #paper-overlay { position:absolute; top:0; left:0; width:100% !important; height:100% !important; pointer-events:auto; cursor:default; }
 .canvas-meta {
-  font-size:9px; color:#8a8070; text-align:center; line-height:1.6;
+  font-size:12px; color:#8a8070; text-align:center; line-height:1.6;
   font-weight:700; letter-spacing:.07em; text-transform:uppercase;
   font-family:'Space Grotesk',sans-serif;
 }
@@ -369,28 +376,26 @@ hr { border:none; border-top:2px solid var(--black); margin:5px 0; }
         <option value="SQS">Square 200 × 200 mm</option>
         <option value="SQL">Square 300 × 300 mm</option>
       </select>
-      <div class="ctrl">
-        <div class="ctrl-head"><span class="ctrl-label">Margin</span><span class="ctrl-val"><span id="v-margin">15</span> mm</span></div>
-        <input type="range" id="margin" min="0" max="60" step="1" value="15" oninput="onMarginChange()">
+
+      <!-- Background + Margin side by side -->
+      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:5px;">
+        <div>
+          <div style="font-size:12px;font-weight:700;margin-bottom:4px;">Background</div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div id="bg-swatch" style="width:20px;height:20px;border:2px solid #000;cursor:pointer;background:#f5f4f0;flex-shrink:0;" onclick="document.getElementById('colBg').click()"></div>
+            <span style="font-family:'Courier New',monospace;font-size:12px;color:var(--mid);" id="bg-hex">#f5f4f0</span>
+            <input type="color" id="colBg" value="#f5f4f0" onchange="onBgChange()">
+          </div>
+        </div>
+        <div style="flex:1;">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
+            <span style="font-size:12px;font-weight:700;">Margin</span>
+            <span style="font-family:'Courier New',monospace;font-size:12px;color:var(--mid);"><span id="v-margin">15</span> mm</span>
+          </div>
+          <input type="range" id="margin" min="0" max="60" step="1" value="15" oninput="onMarginChange()">
+        </div>
       </div>
 
-      <div class="ctrl">
-        <div class="ctrl-head"><span class="ctrl-label">Background</span></div>
-        <div style="display:flex;align-items:center;gap:7px;margin-top:3px;">
-          <div id="bg-swatch" style="width:20px;height:20px;border:2px solid #000;cursor:pointer;background:#f5f4f0" onclick="document.getElementById('colBg').click()"></div>
-          <span style="font-family:'Courier New',monospace;font-size:9px;color:var(--mid)" id="bg-hex">#f5f4f0</span>
-          <input type="color" id="colBg" value="#f5f4f0" onchange="onBgChange()">
-        </div>
-      </div>
-      <div class="ctrl">
-        <div class="ctrl-head"><span class="ctrl-label">Seed</span></div>
-        <div style="display:flex;gap:4px;align-items:center;margin-top:3px;">
-          <button class="btn-sm" onclick="stepSeed(-1)">←</button>
-          <input type="number" id="seed-input" class="seed-input" value="1">
-          <button class="btn-sm" onclick="stepSeed(1)">→</button>
-          <button class="btn-sm" onclick="rndSeed()">⟳</button>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -398,7 +403,7 @@ hr { border:none; border-top:2px solid var(--black); margin:5px 0; }
   <div class="sec">
     <div class="sec-head y">
       <span class="sec-title">Pen Passes</span>
-      <span style="font-size:8px;font-weight:500;opacity:.7">independent shapes</span>
+      <span style="font-size:12px;font-weight:500;opacity:.7">independent shapes</span>
     </div>
     <div class="sec-body">
       <div id="instances-list"></div>
@@ -408,6 +413,13 @@ hr { border:none; border-top:2px solid var(--black); margin:5px 0; }
 
 
   <hr>
+  <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;">
+    <span style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--mid);flex-shrink:0;">Seed</span>
+    <button class="btn-sm" onclick="stepSeed(-1)">←</button>
+    <input type="number" id="seed-input" class="seed-input" style="flex:1;">
+    <button class="btn-sm" onclick="stepSeed(1)">→</button>
+    <button class="btn-sm" onclick="rndSeed()">⟳</button>
+  </div>
   <button class="btn" id="btn-weird" style="background:#ff69b4;border-color:#0a0a0a;color:#0a0a0a;" onclick="slotMachine()">Let's get weird...</button>
   <button class="btn btn-w" onclick="resetDefaults()">Reset Defaults</button>
 
@@ -457,7 +469,7 @@ const DEF_INST=()=>({
   detune:0.010, detuneY:0.010, phases:1,
   offsetX:0, offsetY:0, scale:1.0, rotation:0,
   decayX:0, decayY:0,
-  steps:50000, density:50, strokeW:0.35, alpha:191, skipOverlaps:false,
+  steps:50000, extent:55, spacing:40, strokeW:0.35, alpha:191, skipOverlaps:false,
   ratioLocked:false,
   visible:true,
   locks:{color:false, ratioX:false, ratioY:false, detune:false, phaseOffset:false, amp:false},
@@ -938,59 +950,80 @@ function drawPhaseDial(i){
   const canvas=document.getElementById('dialcanvas-'+i);
   if(!canvas)return;
   const dpr=window.devicePixelRatio||1;
-  // Size canvas backing store to physical pixels
-  const cssSize=canvas.parentElement.getBoundingClientRect().width||200;
+  // Use offsetWidth of the wrap div for accurate size even when section is open
+  const wrap=canvas.parentElement;
+  const cssSize=Math.round(wrap.getBoundingClientRect().width)||wrap.offsetWidth||240;
+  if(cssSize<10)return; // section is collapsed, skip
   const phys=Math.round(cssSize*dpr);
-  canvas.width=phys; canvas.height=phys;
+  // Only resize if needed to avoid clearing unnecessarily
+  if(canvas.width!==phys||canvas.height!==phys){
+    canvas.width=phys; canvas.height=phys;
+  }
   canvas.style.width=cssSize+'px'; canvas.style.height=cssSize+'px';
   const ctx=canvas.getContext('2d');
+  ctx.resetTransform();
   ctx.scale(dpr,dpr);
-  const W=cssSize,CX=W/2,CY=W/2,R=W*0.36,INNER=W*0.13,HR=W*0.045;
+  const W=cssSize,CX=W/2,CY=W/2,R=W*0.36,INNER=W*0.15,HR=W*0.05;
   const N=ALL_PHASES.length;
   const bg='#f2edde',black='#0a0a0a',lime='#00c8a0',mid='#6b6355',paper='#e8e2d0';
   const angleForIdx=idx=>(idx/N)*Math.PI*2-Math.PI/2;
   ctx.clearRect(0,0,W,W);
+
+  // Outer ring
   ctx.beginPath();ctx.arc(CX,CY,R,0,Math.PI*2);
   ctx.fillStyle=bg;ctx.fill();ctx.strokeStyle=black;ctx.lineWidth=2;ctx.stroke();
+
+  // Symmetry slices
   const ph=inst.phases||1;
   ctx.save();
   ctx.beginPath();ctx.arc(CX,CY,R-1,0,Math.PI*2);ctx.clip();
   for(let k=0;k<ph;k++){
     const a1=(k/ph)*Math.PI*2-Math.PI/2,a2=((k+1)/ph)*Math.PI*2-Math.PI/2;
     ctx.beginPath();ctx.moveTo(CX,CY);ctx.arc(CX,CY,R-1,a1,a2);ctx.closePath();
-    ctx.fillStyle=k%2===0?'rgba(0,200,160,0.09)':'rgba(0,200,160,0.03)';ctx.fill();
+    ctx.fillStyle=k%2===0?'rgba(0,200,160,0.12)':'rgba(0,200,160,0.04)';ctx.fill();
     ctx.beginPath();ctx.moveTo(CX,CY);ctx.lineTo(CX+Math.cos(a1)*R,CY+Math.sin(a1)*R);
-    ctx.strokeStyle='rgba(0,200,160,0.2)';ctx.lineWidth=1;ctx.stroke();
+    ctx.strokeStyle='rgba(0,200,160,0.3)';ctx.lineWidth=1;ctx.stroke();
   }
   ctx.restore();
+
+  // Inner circle
   ctx.beginPath();ctx.arc(CX,CY,INNER,0,Math.PI*2);
   ctx.fillStyle=paper;ctx.fill();ctx.strokeStyle=black;ctx.lineWidth=1.5;ctx.stroke();
+
+  // Tick marks + labels
   ALL_PHASES.forEach((p,idx)=>{
     const a=angleForIdx(idx);
     const ox=CX+Math.cos(a)*R,oy=CY+Math.sin(a)*R;
-    const ix=CX+Math.cos(a)*(R-10),iy=CY+Math.sin(a)*(R-10);
+    const ix=CX+Math.cos(a)*(R-12),iy=CY+Math.sin(a)*(R-12);
     const active=p===ph;
+    // Tick
     ctx.beginPath();ctx.moveTo(ix,iy);ctx.lineTo(ox,oy);
-    ctx.strokeStyle=active?lime:mid;ctx.lineWidth=active?2:1;ctx.stroke();
-    const lx=CX+Math.cos(a)*(R+13),ly=CY+Math.sin(a)*(R+13);
+    ctx.strokeStyle=active?lime:black;ctx.lineWidth=active?2.5:1;ctx.stroke();
+    // Label — outside ring
+    const lx=CX+Math.cos(a)*(R+15),ly=CY+Math.sin(a)*(R+15);
     ctx.fillStyle=active?black:mid;
-    ctx.font=(active?'700':'400')+' '+(active?11:9)+"px 'Space Grotesk',sans-serif";
+    ctx.font=(active?'700':'400')+' '+(active?12:10)+"px 'Space Grotesk',sans-serif";
     ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.fillText(p,lx,ly);
   });
+
+  // Handle arm
   const hidx=ALL_PHASES.indexOf(ph);
   const ha=angleForIdx(hidx);
   const hx=CX+Math.cos(ha)*(R-HR-4),hy=CY+Math.sin(ha)*(R-HR-4);
   ctx.beginPath();ctx.moveTo(CX,CY);ctx.lineTo(hx,hy);
-  ctx.strokeStyle=lime;ctx.lineWidth=2;ctx.stroke();
+  ctx.strokeStyle=lime;ctx.lineWidth=2.5;ctx.stroke();
   ctx.beginPath();ctx.arc(hx,hy,HR,0,Math.PI*2);
   ctx.fillStyle=lime;ctx.fill();ctx.strokeStyle=black;ctx.lineWidth=2;ctx.stroke();
+
+  // Centre: large number + label
   ctx.fillStyle=black;
-  ctx.font='bold '+(W*0.10)+"px 'Space Grotesk',sans-serif";
+  ctx.font='700 '+(W*0.13)+"px 'Space Grotesk',sans-serif";
   ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.fillText(ph,CX,CY-W*0.015);
-  ctx.font='700 '+(W*0.05)+"px 'Space Grotesk',sans-serif";
-  ctx.fillStyle=mid;ctx.fillText('phases',CX,CY+W*0.06);
+  ctx.fillText(ph,CX,CY-W*0.018);
+  ctx.font='400 '+(W*0.055)+"px 'Space Grotesk',sans-serif";
+  ctx.fillStyle=mid;
+  ctx.fillText(PHASE_NAMES[ph]||'',CX,CY+W*0.072);
 }
 
 function buildInstDials(){instances.forEach(function(_,i){drawPhaseDial(i);});}
@@ -1035,7 +1068,7 @@ document.addEventListener('mousemove',function(e){if(_dialDragging<0)return;appl
 document.addEventListener('mouseup',function(){_dialDragging=-1;});
 function buildLockRow(inst, i){
   var keys   = ['color','ratioX','ratioY','amp','phaseOffset','detune'];
-  var labels = ['Col',  'RX',    'RY',    'Amp','Ph',         'Det'   ];
+  var labels = ['Col',  'RX',    'RY',    'Amp','Phase',      'Det'   ];
   var html   = '<div class="lock-row"><span class="lock-lbl">Lock:</span>';
   for(var ki=0;ki<keys.length;ki++){
     var k   = keys[ki];
@@ -1058,10 +1091,9 @@ function buildInstancesUI(){
     card.dataset.idx=i;
     card.onclick=(e)=>selectPass(i,e);
     card.innerHTML=`
-      <div class="instance-head${selectedPassIdx===i?' selected':''}" onclick="selectPass(${i}, event)">
-        <span class="drag-handle" title="Drag to reorder">⠿</span>
-        <span class="instance-num">Pass ${i+1}</span>
-        <div class="color-swatch" id="sw-${i}" style="background:${inst.color}" onclick="document.getElementById('ci-${i}').click()"></div>
+      <div class="instance-head${selectedPassIdx===i?' selected':''}" style="background:${inst.color};color:${hexFg(inst.color)};" onclick="selectPass(${i}, event)">
+        <span class="drag-handle" title="Drag to reorder" style="color:${hexFg(inst.color)};opacity:.6;">⠿</span>
+        <span class="instance-num" style="color:${hexFg(inst.color)};">Pass ${i+1}</span>
         <input type="color" id="ci-${i}" value="${inst.color}" onchange="setInstColor(${i},this.value)">
         <div class="inst-actions">
           <button class="inst-vis-btn${inst.visible===false?' dim':''}" title="${inst.visible===false?'Show':'Hide'}" onclick="toggleInstVisible(${i})">${inst.visible===false?'○':'●'}</button>
@@ -1076,22 +1108,9 @@ function buildInstancesUI(){
 <!-- PEN SECTION -->
         <button class="inst-shape-toggle" id="penbtn-${i}" onclick="toggleSection(${i},'pen')">${inst.penOpen?'▾':'▸'} PEN</button>
         <div class="inst-shape-body ${inst.penOpen?'open':''}" id="pen-${i}">
-          <!-- COLOR + TRANSPARENCY INLINE -->
+          <!-- STROKE PICKER FIRST -->
           <div class="ctrl">
-            <div class="ctrl-head"><span class="ctrl-label">Color</span><span style="font-size:8px;color:var(--mid);font-weight:400;">Transparency</span></div>
-            <div style="display:flex;align-items:center;gap:7px;margin-top:3px;">
-              <div id="icolor-swatch-${i}" style="width:20px;height:20px;border:2px solid #000;cursor:pointer;flex-shrink:0;background:${inst.color||'#000000'}" onclick="document.getElementById('icolor-${i}').click()"></div>
-              <span style="font-family:'Courier New',monospace;font-size:9px;color:var(--mid);flex-shrink:0;" id="icolor-hex-${i}">${inst.color||'#000000'}</span>
-              <input type="color" id="icolor-${i}" value="${inst.color||'#000000'}" onchange="setInstColor(${i},this.value)">
-              <input type="range" id="ialphasl-${i}" min="1" max="100" step="1" value="${Math.round((inst.alpha||191)/255*100)}" oninput="setInstAlpha(${i},this.value)" style="flex:1;margin-bottom:0;" title="Transparency">
-              <input type="number" class="ctrl-val-input" id="ialpha-${i}" value="${Math.round((inst.alpha||191)/255*100)}" min="1" max="100" step="1" onchange="setInstAlpha(${i},this.value)" style="width:28px;"><span class="unit-lbl">%</span>
-            </div>
-          </div>
-          <!-- STROKE -->
-          <div class="ctrl">
-            <div class="ctrl-head"><span class="ctrl-label">Stroke</span></div>
-            <div style="margin-top:3px;">
-              <select id="ipen-${i}" onchange="onPenPickerChange(${i},this.value)" style="width:100%;margin-bottom:4px;font-size:8px;padding:2px 4px;">
+            <select id="ipen-${i}" onchange="onPenPickerChange(${i},this.value)" style="width:100%;margin-bottom:0;font-size:12px;padding:3px 5px;">
                 <option value="custom" ${![0.20,0.25,0.30,0.35,0.45,0.50,0.60,0.80,0.10,0.70,1.00].includes(parseFloat((inst.strokeW||0.35).toFixed(2)))?'selected':''}>Custom…</option>
                 <optgroup label="Micron">
                   <option value="0.20" ${(inst.strokeW||0.35).toFixed(2)==='0.20'?'selected':''}>Micron 005 — 0.20mm</option>
@@ -1112,10 +1131,20 @@ function buildInstancesUI(){
                   <option value="1.00" ${(inst.strokeW||0.35).toFixed(2)==='1.00'?'selected':''}>Staedtler 1.0mm</option>
                 </optgroup>
               </select>
-              <div id="ipen-custom-${i}" style="display:${![0.20,0.25,0.30,0.35,0.45,0.50,0.60,0.80,0.10,0.70,1.00].includes(parseFloat((inst.strokeW||0.35).toFixed(2)))?'flex':'none'};align-items:center;gap:5px;">
+              <div id="ipen-custom-${i}" style="display:${![0.20,0.25,0.30,0.35,0.45,0.50,0.60,0.80,0.10,0.70,1.00].includes(parseFloat((inst.strokeW||0.35).toFixed(2)))?'flex':'none'};align-items:center;gap:5px;margin-top:4px;">
                 <input type="number" class="ctrl-val-input" id="isw-${i}" value="${(inst.strokeW||0.35).toFixed(2)}" min="0.05" max="3" step="0.05" style="width:44px;" onchange="setInstStrokeW(${i},this.value)">
                 <span class="unit-lbl">mm</span>
               </div>
+          </div>
+          <!-- COLOR + TRANSPARENCY INLINE -->
+          <div class="ctrl">
+            <div class="ctrl-head"><span class="ctrl-label">Color</span><span style="font-size:12px;color:var(--mid);font-weight:400;">Transparency</span></div>
+            <div style="display:flex;align-items:center;gap:7px;margin-top:3px;">
+              <div id="icolor-swatch-${i}" style="width:20px;height:20px;border:2px solid #000;cursor:pointer;flex-shrink:0;background:${inst.color||'#000000'}" onclick="document.getElementById('icolor-${i}').click()"></div>
+              <span style="font-family:'Courier New',monospace;font-size:12px;color:var(--mid);flex-shrink:0;" id="icolor-hex-${i}">${inst.color||'#000000'}</span>
+              <input type="color" id="icolor-${i}" value="${inst.color||'#000000'}" onchange="setInstColor(${i},this.value)">
+              <input type="range" id="ialphasl-${i}" min="1" max="100" step="1" value="${Math.round((inst.alpha||191)/255*100)}" oninput="setInstAlpha(${i},this.value)" style="flex:1;margin-bottom:0;" title="Transparency">
+              <input type="number" class="ctrl-val-input" id="ialpha-${i}" value="${Math.round((inst.alpha||191)/255*100)}" min="1" max="100" step="1" onchange="setInstAlpha(${i},this.value)" style="width:28px;"><span class="unit-lbl">%</span>
             </div>
           </div>
         </div>
@@ -1123,10 +1152,15 @@ function buildInstancesUI(){
         <button class="inst-shape-toggle" id="shapebtn-${i}" onclick="toggleSection(${i},'shape')">${isOpen?'▾':'▸'} SHAPE &mdash; X:${RATIOS[inst.ratioX].label} Y:${RATIOS[inst.ratioY].label}</button>
         <div class="inst-shape-body ${isOpen?'open':''}" id="shape-${i}">
           <div class="ratio-pad-readout" id="padlbl-${i}">X: ${RATIOS[inst.ratioX].label} &nbsp; Y: ${RATIOS[inst.ratioY].label}</div>
-          <div class="ratio-pad" id="pad-${i}" onmousedown="onPadDown(event,${i})" ontouchstart="onPadTouch(event,${i})" ontouchmove="onPadTouch(event,${i})">
-            <div class="ratio-pad-ch" id="pad-ch-${i}"></div>
-            <div class="ratio-pad-cv" id="pad-cv-${i}"></div>
-            <div class="ratio-pad-cursor" id="pad-cur-${i}"></div>
+          <div class="ratio-pad-xlbls" id="pad-xlbls-${i}"></div>
+          <div class="ratio-pad-wrap">
+            <div class="ratio-pad-ylbls" id="pad-ylbls-${i}"></div>
+            <div class="ratio-pad" id="pad-${i}" onmousedown="onPadDown(event,${i})" ontouchstart="onPadTouch(event,${i})" ontouchmove="onPadTouch(event,${i})">
+              <div class="ratio-pad-ch" id="pad-ch-${i}"></div>
+              <div class="ratio-pad-cv" id="pad-cv-${i}"></div>
+              <div class="ratio-pad-cursor" id="pad-cur-${i}"></div>
+              <button class="ratio-pad-lock" id="pad-lock-${i}" style="display:none"></button>
+            </div>
           </div>
           <!-- DETUNE X -->
           <div class="ctrl" style="margin-top:5px;">
@@ -1138,11 +1172,13 @@ function buildInstancesUI(){
             <div class="ctrl-head"><span class="ctrl-label">Detune Y</span><input type="number" class="ctrl-val-input" id="idetY-${i}" value="${(inst.detuneY!=null?inst.detuneY:inst.detune).toFixed(4)}" min="0" max="0.0125" step="0.0002" onchange="setInstDetuneY(${i},this.value);document.getElementById('idetYslider-'+${i}).value=this.value;"></div>
             <input type="range" id="idetYslider-${i}" min="0" max="0.0125" step="0.0002" value="${inst.detuneY!=null?inst.detuneY:inst.detune}" oninput="setInstDetuneY(${i},this.value)">
           </div>
-          <!-- DETAIL (density) + AMPLITUDE SPLIT BARS -->
+          <!-- EXTENT + SPACING + AMPLITUDE SPLIT BARS -->
           <div class="amp-split-wrap">
-            <div style="font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--mid);margin-bottom:3px;">Detail</div>
-            <div class="ctrl" style="margin-bottom:8px;"><div class="ctrl-head"><input type="number" class="ctrl-val-input" id="idens-${i}" value="${inst.density||50}" min="1" max="100" step="1" style="width:36px;" onchange="setInstDensity(${i},this.value)"></div><input type="range" id="idenssl-${i}" min="1" max="100" step="1" value="${inst.density||50}" oninput="setInstDensity(${i},this.value)"></div>
-            <div style="font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--mid);margin-bottom:4px;">Amplitude</div>
+            <div class="ctrl-head" style="margin-bottom:3px;"><span class="ctrl-label">Extent</span><input type="number" class="ctrl-val-input" id="iext-${i}" value="${inst.extent!=null?inst.extent:100}" min="1" max="100" step="1" style="width:36px;" onchange="setInstExtent(${i},this.value)"></div>
+            <input type="range" id="iextsl-${i}" min="1" max="100" step="1" value="${inst.extent!=null?inst.extent:100}" oninput="setInstExtent(${i},this.value)" style="margin-bottom:8px;">
+            <div class="ctrl-head" style="margin-bottom:3px;"><span class="ctrl-label">Spacing</span><input type="number" class="ctrl-val-input" id="ispc-${i}" value="${inst.spacing!=null?inst.spacing:50}" min="1" max="100" step="1" style="width:36px;" onchange="setInstSpacing(${i},this.value)"></div>
+            <input type="range" id="ispcsl-${i}" min="1" max="100" step="1" value="${inst.spacing!=null?inst.spacing:50}" oninput="setInstSpacing(${i},this.value)" style="margin-bottom:8px;">
+            <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mid);margin-bottom:4px;">Amplitude</div>
             <div class="amp-split-row">
               <div class="amp-split-axis">X</div>
               <div class="amp-split-bar" id="ampbarX-${i}" onmousedown="onAmpBarDown(event,${i},'X')" ontouchstart="onAmpBarTouch(event,${i},'X')" ontouchmove="onAmpBarTouch(event,${i},'X')">
@@ -1215,7 +1251,7 @@ function buildInstancesUI(){
     card.addEventListener('drop', e=>onCardDrop(e,i,card));
     card.addEventListener('dragend', e=>{ card.draggable=false; onCardDragEnd(e); });
     buildInstPad(i);
-    drawPhaseDial(i);
+    requestAnimationFrame(()=>drawPhaseDial(i));
     updateAmpBar(i);
   });
 }
@@ -1224,9 +1260,11 @@ function buildInstPad(i){
   const inst = instances[i];
   const pad = document.getElementById(`pad-${i}`);
   if(!pad) return;
-  pad.querySelectorAll('.ratio-pad-dot,.ratio-pad-xlbl,.ratio-pad-ylbl').forEach(e=>e.remove());
+  pad.querySelectorAll('.ratio-pad-dot').forEach(e=>e.remove());
   const N = RATIOS.length;
   const pct = idx => (idx/(N-1))*100;
+
+  // Dots inside pad
   RATIOS.forEach((r,xi)=>{
     RATIOS.forEach((r2,yi)=>{
       const dot = document.createElement('div');
@@ -1236,19 +1274,32 @@ function buildInstPad(i){
       dot.dataset.xi=xi; dot.dataset.yi=yi;
       pad.appendChild(dot);
     });
-    const xl=document.createElement('span');
-    xl.className='ratio-pad-xlbl';
-    xl.style.left=pct(xi)+'%';
-    xl.textContent=r.label;
-    pad.appendChild(xl);
   });
-  RATIOS.forEach((r2,yi)=>{
-    const yl=document.createElement('span');
-    yl.className='ratio-pad-ylbl';
-    yl.style.top=pct(yi)+'%';
-    yl.textContent=r2.label;
-    pad.appendChild(yl);
-  });
+
+  // X labels above pad
+  const xlbls = document.getElementById(`pad-xlbls-${i}`);
+  if(xlbls){
+    xlbls.innerHTML='';
+    RATIOS.forEach((r,xi)=>{
+      const span=document.createElement('span');
+      span.className='ratio-pad-xlbl-ext';
+      span.textContent=r.label;
+      xlbls.appendChild(span);
+    });
+  }
+
+  // Y labels left of pad
+  const ylbls = document.getElementById(`pad-ylbls-${i}`);
+  if(ylbls){
+    ylbls.innerHTML='';
+    RATIOS.forEach((r2,yi)=>{
+      const span=document.createElement('span');
+      span.className='ratio-pad-ylbl-ext';
+      span.textContent=r2.label;
+      ylbls.appendChild(span);
+    });
+  }
+
   updatePadCursor(i);
 }
 
@@ -1337,7 +1388,7 @@ function toggleSection(i, key){
   const bodyId=key==='shape'?`shape-${i}`:key==='transform'?`transf-${i}`:key==='pen'?`pen-${i}`:`phss-${i}`;
   const body=document.getElementById(bodyId);
   if(body) body.classList.toggle('open', isOpen);
-  if(key==='phases' && isOpen) drawPhaseDial(i);
+  if(key==='phases' && isOpen) requestAnimationFrame(()=>drawPhaseDial(i));
   const btnId=key==='shape'?`shapebtn-${i}`:key==='transform'?`transfbtn-${i}`:key==='pen'?`penbtn-${i}`:`phsbtn-${i}`;
   const btn=document.getElementById(btnId);
   if(btn){
@@ -1357,16 +1408,28 @@ function computeSteps(inst){
   const r=RATIOS[inst.ratioX]||RATIOS[0], r2=RATIOS[inst.ratioY]||RATIOS[0];
   const f1=r.f1,f2=r.f2,f3=r2.f1,f4=r2.f2;
   const cycles=lcm(lcm(f1,f2),lcm(f3,f4));
-  const pointsPerCycle=500;
-  const d=Math.max(1,Math.min(100,inst.density||50));
-  // Quadratic shifted: more resolution across low-mid range, ramp above 75
-  const logScale=1+19*Math.pow((d-1)/99,3);
-  return Math.max(1000, Math.round(cycles*pointsPerCycle*logScale));
+  // Base period = one full closure of the undetuned shape
+  const baseT=2*Math.PI*cycles;
+  // Extent: 1→ 1× base period, 100→ 20× base period (log so low end is usable)
+  const ext=Math.max(1,Math.min(100,inst.extent!=null?inst.extent:100));
+  const multiplier=Math.pow(17,(ext-1)/99); // 1× at ext=1, 17× at ext=100 = full closure
+  const totalT=baseT*multiplier;
+  // Spacing: 1=dense (500 pts/2π) → 100=airy (60 pts/2π)
+  const sp=Math.max(1,Math.min(100,inst.spacing!=null?inst.spacing:50));
+  const ptsPerTwoPi=Math.round(500*Math.pow(60/500,(sp-1)/99));
+  const ptsPerUnit=ptsPerTwoPi/(2*Math.PI);
+  return Math.max(500, Math.round(totalT*ptsPerUnit));
 }
-function setInstDensity(i,v){
-  instances[i].density=Math.max(1,Math.min(100,parseInt(v)||3));
-  const el=document.getElementById(`idens-${i}`);if(el)el.value=instances[i].density;
-  const sl=document.getElementById(`idenssl-${i}`);if(sl)sl.value=instances[i].density;
+function setInstExtent(i,v){
+  instances[i].extent=Math.max(1,Math.min(100,parseInt(v)||100));
+  const el=document.getElementById(`iext-${i}`);if(el)el.value=instances[i].extent;
+  const sl=document.getElementById(`iextsl-${i}`);if(sl)sl.value=instances[i].extent;
+  redraw();
+}
+function setInstSpacing(i,v){
+  instances[i].spacing=Math.max(1,Math.min(100,parseInt(v)||50));
+  const el=document.getElementById(`ispc-${i}`);if(el)el.value=instances[i].spacing;
+  const sl=document.getElementById(`ispcsl-${i}`);if(sl)sl.value=instances[i].spacing;
   redraw();
 }
 function onPenPickerChange(i,v){
@@ -1420,8 +1483,9 @@ function showInstTab(i,tab){
 
 function setInstColor(i,v){
   instances[i].color=v;
-  const s=document.getElementById('sw-'+i);const h=document.getElementById('ch-'+i);
-  if(s)s.style.background=v;if(h)h.textContent=v;
+  // Update header background + adaptive text
+  const head=document.querySelector(`.instance-card:nth-child(${i+1}) .instance-head`);
+  if(head){head.style.background=v;const fg=hexFg(v);head.style.color=fg;head.querySelectorAll('.instance-num,.drag-handle').forEach(el=>el.style.color=fg);}
   const ps=document.getElementById('icolor-swatch-'+i);const ph=document.getElementById('icolor-hex-'+i);
   if(ps)ps.style.background=v;if(ph)ph.textContent=v;
   redraw();
@@ -1529,7 +1593,8 @@ function randomizeInstance(i, silent=false){
   }
   inst.offsetX=0; inst.offsetY=0; inst.scale=1.0; inst.rotation=0; inst.phases=1;
   inst._padX=undefined; inst._padY=undefined;
-  inst.density=Math.floor(Math.random()*30)+1;
+  inst.extent=Math.floor(Math.random()*60)+40; // 40-100
+  inst.spacing=Math.floor(Math.random()*70)+10; // 10-80
   inst.strokeW=+(0.10+Math.random()*0.60).toFixed(2);
   inst.alpha=Math.round((20+Math.floor(Math.random()*60))/100*255);
   if(!silent){buildInstancesUI();updateFit();redraw();}
@@ -1854,10 +1919,15 @@ function computePoints(inst, rotAngle=0){
   const oxMm=(inst.offsetX||0)*u,  oyMm=-(inst.offsetY||0)*u;
   const sn=((P.seed*1.618033)%1)*2.5;
   const cosR=Math.cos(rotAngle), sinR=Math.sin(rotAngle);
-  const totalT=N*P.dt;
+  const r=RATIOS[inst.ratioX]||RATIOS[0], r2=RATIOS[inst.ratioY]||RATIOS[0];
+  const cycles=lcm(lcm(r.f1,r.f2),lcm(r2.f1,r2.f2));
+  const baseT=2*Math.PI*cycles;
+  const ext=Math.max(1,Math.min(100,inst.extent!=null?inst.extent:100));
+  const totalT=baseT*Math.pow(17,(ext-1)/99);
+  const dt=totalT/N;
   const pts=[];
   for(let j=0;j<N;j++){
-    const t=j*P.dt, po=inst.phaseOffset+sn;
+    const t=j*dt, po=inst.phaseOffset+sn;
     const decX=Math.exp(-(inst.decayX||0)*t/totalT);
     const decY=Math.exp(-(inst.decayY||0)*t/totalT);
     const x=(inst.A1*Math.cos(f.f1*t+inst.p1+po)+inst.A2*Math.cos(f.f2*t+inst.p2))*decX;
@@ -1895,6 +1965,8 @@ function filterBySpacing(pts, minMm){
 
 // ─── P5 RENDER ───────────────────────────────────────────
 function hexRgb(h){return[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];}
+function hexLuminance(h){const[r,g,b]=hexRgb(h);return(0.299*r+0.587*g+0.114*b)/255;}
+function hexFg(h){return hexLuminance(h)>0.45?'#0a0a0a':'#f2edde';}
 
 function buildSketch(p){
   p.setup=function(){const c=p.createCanvas(csW(),csH());c.parent('canvas-container');p.noLoop();render(p);};
@@ -2040,6 +2112,11 @@ function loadStateFromURL(){
   const state=decodeState(hash);
   if(!state||!state.P||!state.instances) return false;
   P=state.P; instances=state.instances; soloIdx=state.soloIdx||-1;
+  instances.forEach(inst=>{
+    if(inst.density!=null && inst.extent==null){inst.extent=Math.round(inst.density);inst.spacing=50;delete inst.density;}
+    if(inst.extent==null) inst.extent=100;
+    if(inst.spacing==null) inst.spacing=50;
+  });
   if(state.marginMm!=null){marginMm=state.marginMm;document.getElementById('margin').value=marginMm;document.getElementById('v-margin').textContent=marginMm;}
   if(state.paperKey){const sel=document.getElementById('paperSize');if(sel){sel.value=state.paperKey;paper=PAPERS[state.paperKey];}}
   document.getElementById('seed-input').value=P.seed;

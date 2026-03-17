@@ -206,7 +206,7 @@
       <!-- PAPER -->
       <div class="section" id="paper">
         <h2 class="black">Paper &amp; Margin</h2>
-        <p>Sets output paper size, margin, and background color. The <strong>Seed</strong> controls oscillator starting positions — small changes can produce dramatically different drawings.</p>
+        <p>Sets the output paper size and margin. The background color picker sets the canvas fill. <strong>Seed</strong> sits just above the randomise button at the bottom of the sidebar — it controls oscillator starting positions and small changes can produce dramatically different drawings.</p>
       </div>
 
       <hr>
@@ -228,29 +228,29 @@
               <button class="btn-sm">×</button>
             </div>
           </div>
-          <div class="section-toggle">▸ PEN <span class="tag">Color · Weight · Opacity · Density</span></div>
-          <div class="section-toggle">▸ SHAPE <span class="tag">Ratio · Detune · Amplitude</span></div>
+          <div class="section-toggle">▸ PEN <span class="tag">Stroke · Color · Transparency</span></div>
+          <div class="section-toggle">▸ SHAPE <span class="tag">Ratio · Detune · Extent · Spacing · Amplitude</span></div>
           <div class="section-toggle">▸ PHASES <span class="tag">1×</span></div>
           <div class="section-toggle">▸ TRANSFORM</div>
         </div>
 
         <div class="callout lime">
           <div class="callout-label">Canvas interaction</div>
-          <p>Click a pass card header to select it. A bounding box appears on the canvas — drag <strong>corners</strong> to scale, the <strong>circle above</strong> to rotate (snaps to 45°), <strong>inside</strong> to move. A pixel preview shows during drag; the full render commits on release.</p>
+          <p>Click a pass card header (colored with the pass ink) to select it. A bounding box appears on the canvas — drag <strong>corners</strong> to scale, the <strong>circle above</strong> to rotate (snaps to 45°), <strong>inside</strong> to move. A pixel preview shows during drag; the full render commits on release.</p>
         </div>
       </div>
 
       <!-- PEN -->
       <div class="section" id="pen">
         <div class="section-card">
-          <div class="section-card-head">▾ PEN <span class="tag">Color · Line weight · Opacity · Density</span></div>
+          <div class="section-card-head">▾ PEN <span class="tag">Stroke · Color · Transparency</span></div>
           <div class="section-card-body">
+            <p>The pass card header fills with the pass color — a quick visual indicator of which ink each layer uses.</p>
             <table>
               <tr><th>Control</th><th>What it does</th></tr>
-              <tr><td>Color</td><td>Ink color for this pass. Click the swatch to open the color picker.</td></tr>
-              <tr><td>Line weight</td><td>Stroke width in mm. Use the pen picker to match a real Micron or Staedtler pen size.</td></tr>
-              <tr><td>Opacity</td><td>0–100%. Layering passes at lower opacity creates depth and optical blending.</td></tr>
-              <tr><td>Density</td><td>How densely the curve is drawn. 1–100 logarithmic scale — most interesting range is 1–50. Higher values produce dense hatching.</td></tr>
+              <tr><td>Stroke</td><td>Select a real pen from the dropdown (Micron or Staedtler). Choose <em>Custom…</em> to enter any mm value directly.</td></tr>
+              <tr><td>Color</td><td>Ink color for this pass. Click the swatch to open the color picker. Updates the card header live.</td></tr>
+              <tr><td>Transparency</td><td>0–100% preview opacity. Lower values let overlapping passes blend visually. Affects preview only — the SVG exports at full stroke.</td></tr>
             </table>
           </div>
         </div>
@@ -259,24 +259,24 @@
       <!-- SHAPE -->
       <div class="section" id="shape">
         <div class="section-card">
-          <div class="section-card-head">▾ SHAPE <span class="tag">Ratio pad · Detune X/Y · Amplitude</span></div>
+          <div class="section-card-head">▾ SHAPE <span class="tag">Ratio pad · Detune X/Y · Extent · Spacing · Amplitude</span></div>
           <div class="section-card-body">
-            <p>Controls the mathematical curve using the <strong>XY ratio pad</strong>. Drag to choose frequency ratios for X and Y oscillators. Snaps to ratio intersections with magnetic pull, floats freely between for detuned shapes.</p>
+            <p>Controls the mathematical curve using the <strong>XY ratio pad</strong>. X labels sit above the pad, Y labels to the left. Drag to choose frequency ratios — snaps to intersections with magnetic pull, floats freely between.</p>
 
             <div class="xy-pad-mock">
               <div class="ch"></div>
               <div class="cv"></div>
               <div class="cursor"></div>
-              <span class="lock">LINK</span>
               <span class="xlbl">X ratio</span>
               <span class="ylbl">Y ratio</span>
             </div>
 
             <table style="margin-top:12px;">
               <tr><th>Control</th><th>What it does</th></tr>
-              <tr><td>XY Ratio pad</td><td>X axis = X oscillator ratio, Y axis = Y oscillator ratio. Drag to explore.</td></tr>
-              <tr><td>LINK toggle</td><td>Locks the X/Y ratio interval — dragging moves both axes together.</td></tr>
-              <tr><td>Detune X / Y</td><td>Slightly offsets frequency, causing the shape to slowly rotate or spiral.</td></tr>
+              <tr><td>XY Ratio pad</td><td>X axis = X oscillator ratio, Y axis = Y oscillator ratio. Drag to explore — labels sit outside the pad for clarity.</td></tr>
+              <tr><td>Detune X / Y</td><td>Slightly offsets the oscillator frequency, causing the shape to slowly rotate and spiral over time.</td></tr>
+              <tr><td>Extent</td><td>How many times the base shape loops before stopping. Low values show the opening strokes of the figure; high values let the detuned spiral fill out fully. At the default detune of 0.01, Extent 100 produces a fully closed shape.</td></tr>
+              <tr><td>Spacing</td><td>Controls how densely the strokes are packed. Low = tightly hatched. High = open and airy with visible gaps between lines.</td></tr>
             </table>
 
             <p style="margin-top:16px;font-size:13px;font-weight:700;">Amplitude</p>
