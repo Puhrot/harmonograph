@@ -180,8 +180,6 @@ select:focus { outline:none; }
 .ratio-pad-dot.active { background:var(--lime); border-color:var(--black); }
 .ratio-pad-xlbl { position:absolute; font-size:7px; font-weight:700; color:var(--mid); transform:translateX(-50%); top:3px; font-family:'Space Grotesk',sans-serif; pointer-events:none; }
 .ratio-pad-ylbl { position:absolute; font-size:7px; font-weight:700; color:var(--mid); transform:translateY(-50%); left:3px; font-family:'Space Grotesk',sans-serif; pointer-events:none; }
-.ratio-pad-lock { position:absolute; top:3px; right:3px; z-index:20; padding:1px 5px; border:1.5px solid var(--mid); font-size:7px; font-family:'Space Grotesk',sans-serif; font-weight:700; background:var(--white); color:var(--mid); cursor:pointer; }
-.ratio-pad-lock.on { background:var(--yellow); border-color:var(--black); color:var(--black); }
 .ratio-pad-readout { font-size:8px; font-weight:700; text-align:center; color:var(--mid); margin-bottom:4px; font-family:'Space Grotesk',sans-serif; letter-spacing:.05em; }
 
 /* ── ROTOR TABS ─────────────────────────────────── */
@@ -939,8 +937,15 @@ function drawPhaseDial(i){
   const inst=instances[i];
   const canvas=document.getElementById('dialcanvas-'+i);
   if(!canvas)return;
+  const dpr=window.devicePixelRatio||1;
+  // Size canvas backing store to physical pixels
+  const cssSize=canvas.parentElement.getBoundingClientRect().width||200;
+  const phys=Math.round(cssSize*dpr);
+  canvas.width=phys; canvas.height=phys;
+  canvas.style.width=cssSize+'px'; canvas.style.height=cssSize+'px';
   const ctx=canvas.getContext('2d');
-  const W=canvas.width,CX=W/2,CY=W/2,R=W*0.36,INNER=W*0.13,HR=W*0.045;
+  ctx.scale(dpr,dpr);
+  const W=cssSize,CX=W/2,CY=W/2,R=W*0.36,INNER=W*0.13,HR=W*0.045;
   const N=ALL_PHASES.length;
   const bg='#f2edde',black='#0a0a0a',lime='#00c8a0',mid='#6b6355',paper='#e8e2d0';
   const angleForIdx=idx=>(idx/N)*Math.PI*2-Math.PI/2;
@@ -1122,7 +1127,6 @@ function buildInstancesUI(){
             <div class="ratio-pad-ch" id="pad-ch-${i}"></div>
             <div class="ratio-pad-cv" id="pad-cv-${i}"></div>
             <div class="ratio-pad-cursor" id="pad-cur-${i}"></div>
-            <button class="ratio-pad-lock${inst.ratioLocked?' on':''}" id="pad-lock-${i}" onclick="toggleRatioLock(${i})">${inst.ratioLocked?'LINKED':'LINK'}</button>
           </div>
           <!-- DETUNE X -->
           <div class="ctrl" style="margin-top:5px;">
@@ -1286,14 +1290,12 @@ function padPosToRatio(x, y){
 let _padDragging=-1;
 
 function onPadDown(e, i){
-  if(e.target.classList.contains('ratio-pad-lock')) return;
   _padDragging=i;
   applyPadMove(e.clientX, e.clientY, i);
   e.preventDefault();
 }
 
 function onPadTouch(e, i){
-  if(e.target.classList.contains('ratio-pad-lock')) return;
   applyPadMove(e.touches[0].clientX, e.touches[0].clientY, i);
   e.preventDefault();
 }
@@ -1309,16 +1311,7 @@ function applyPadMove(cx, cy, i){
   const N=RATIOS.length;
   const pct=idx=>(idx/(N-1))*100;
   if(snapped){x=pct(xi);y=pct(yi);}
-  if(inst.ratioLocked){
-    // Move both axes together maintaining interval
-    const dxi=xi-inst.ratioX;
-    const dyi=yi-inst.ratioY;
-    const step=Math.abs(dxi)>=Math.abs(dyi)?dxi:dyi;
-    const nxi=Math.max(0,Math.min(N-1,inst.ratioX+step));
-    const nyi=Math.max(0,Math.min(N-1,inst.ratioY+step));
-    inst.ratioX=nxi; inst.ratioY=nyi;
-    inst._padX=pct(nxi); inst._padY=pct(nyi);
-  } else {
+  {
     inst._padX=x; inst._padY=y;
     inst.ratioX=xi; inst.ratioY=yi;
   }
@@ -1331,12 +1324,6 @@ document.addEventListener('mousemove', e=>{
   applyPadMove(e.clientX, e.clientY, _padDragging);
 });
 document.addEventListener('mouseup', ()=>{ _padDragging=-1; });
-
-function toggleRatioLock(i){
-  instances[i].ratioLocked=!instances[i].ratioLocked;
-  const btn=document.getElementById(`pad-lock-${i}`);
-  if(btn){btn.classList.toggle('on',instances[i].ratioLocked);btn.textContent=instances[i].ratioLocked?'LINKED':'LINK';}
-}
 
 function updateShapeLabel(i){
   const inst=instances[i];
