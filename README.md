@@ -2,8 +2,11 @@
 
 A browser-based rotary harmonograph simulator for generative pen plotter art. Layer independent pen passes, tune frequency ratios, symmetry, and transforms, then export a ready-to-plot SVG — no build step, no install, no server required.
 
-**[Live app →](https://puhrot.github.io/harmonograph)**  
-**[User Manual →](https://puhrot.github.io/harmonograph/help.html)**
+---
+
+## → [Open the live app](https://puhrot.github.io/harmonograph)
+
+## → [Read the user manual](https://puhrot.github.io/harmonograph/help.html)
 
 ---
 
