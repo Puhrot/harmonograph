@@ -334,6 +334,240 @@ input[type=color] { width:0; height:0; opacity:0; position:absolute; pointer-eve
   font-family:'Space Grotesk',sans-serif;
 }
 hr { border:none; border-top:2px solid var(--black); margin:5px 0; }
+
+/* ═══════════════════════════════════════════════════
+   MOBILE-FIRST RESPONSIVE OVERHAUL
+   ═══════════════════════════════════════════════════ */
+
+/* ── BIGGER TOUCH TARGETS for sliders ──────────────── */
+input[type=range] {
+  height: 24px;
+  padding: 8px 0;
+  box-sizing: border-box;
+}
+input[type=range]::-webkit-slider-thumb {
+  width: 20px; height: 20px;
+}
+input[type=range]::-moz-range-thumb {
+  width: 20px; height: 20px;
+}
+
+/* ── MOBILE BOTTOM NAV ─────────────────────────────── */
+.mobile-nav {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 52px;
+  background: var(--black);
+  border-top: 3px solid var(--lime);
+  z-index: 200;
+  flex-direction: row;
+}
+.mobile-nav-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border: none;
+  background: transparent;
+  color: rgba(255,255,255,0.4);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  cursor: pointer;
+  padding: 6px 0;
+  transition: color .15s;
+  border-right: 1px solid rgba(255,255,255,0.08);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.mobile-nav-btn:last-child { border-right: none; }
+.mobile-nav-btn .nav-icon { font-size: 17px; line-height: 1; }
+.mobile-nav-btn.active { color: var(--lime); }
+.mobile-nav-btn.active .nav-icon { color: var(--lime); }
+.mobile-nav-btn.y-btn { color: var(--yellow); }
+.mobile-nav-btn.y-btn .nav-icon { color: var(--yellow); }
+
+/* ── MOBILE DRAWER ─────────────────────────────────── */
+.mobile-drawer {
+  display: none;
+  position: fixed;
+  bottom: 52px; left: 0; right: 0;
+  background: var(--paper);
+  border-top: 3px solid var(--black);
+  z-index: 150;
+  flex-direction: column;
+  transform: translateY(100%);
+  transition: transform .28s cubic-bezier(.22,.61,.36,1);
+  max-height: calc(70vh);
+  overflow: hidden;
+}
+.mobile-drawer.open { transform: translateY(0); }
+
+.drawer-handle-wrap {
+  display: flex; justify-content: center;
+  padding: 8px 0 4px;
+  cursor: row-resize;
+  flex-shrink: 0;
+}
+.drawer-handle { width: 38px; height: 4px; background: var(--mid); border-radius: 2px; opacity: .45; }
+
+.drawer-tabs {
+  display: flex;
+  border-bottom: 3px solid var(--black);
+  flex-shrink: 0;
+}
+.drawer-tab {
+  flex: 1;
+  padding: 9px 2px;
+  border: none;
+  border-right: 2px solid var(--black);
+  background: var(--white);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: var(--mid);
+  cursor: pointer;
+  transition: all .1s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.drawer-tab:last-child { border-right: none; }
+.drawer-tab.active { background: var(--black); color: var(--lime); }
+
+.drawer-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+.drawer-panel {
+  display: none;
+  padding: 8px;
+}
+.drawer-panel.active { display: block; }
+
+/* ── MOBILE HEADER ─────────────────────────────────── */
+.mobile-header {
+  display: none;
+  background: var(--black);
+  border-bottom: 3px solid var(--black);
+  padding: 0 10px;
+  height: 46px;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  z-index: 100;
+}
+.mobile-header h1 {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -.02em;
+  color: var(--lime);
+  flex: 1;
+}
+.m-hdr-btn {
+  padding: 5px 9px;
+  border: 1.5px solid var(--lime);
+  background: transparent;
+  color: var(--lime);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all .1s;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+}
+.m-hdr-btn:active { background: var(--lime); color: var(--black); }
+.m-hdr-btn.y { border-color: var(--yellow); color: var(--yellow); }
+.m-hdr-btn.y:active { background: var(--yellow); color: var(--black); }
+.m-hdr-sep { width: 1px; height: 18px; background: rgba(0,200,160,.2); }
+
+/* ── DRAWER CONTROLS SIZING ────────────────────────── */
+.drawer-panel .ctrl { margin-bottom: 12px; }
+.drawer-panel .ctrl-label { font-size: 14px; }
+.drawer-panel .ctrl-val { font-size: 13px; }
+.drawer-panel .ctrl-val-input { font-size: 13px; width: 52px; }
+.drawer-panel select { font-size: 13px; padding: 8px 10px; min-height: 42px; }
+.drawer-panel .btn { min-height: 44px; font-size: 13px; padding: 10px; }
+.drawer-panel .btn-sm { min-height: 38px; min-width: 38px; padding: 8px 12px; font-size: 11px; }
+.drawer-panel .tab { min-height: 34px; font-size: 10px; }
+.drawer-panel .sec { margin-bottom: 8px; }
+.drawer-panel .sec-body { padding: 10px; }
+.drawer-panel .hdr-btn { min-height: 38px; padding: 6px 12px; font-size: 10px; }
+.drawer-panel .hdr-label { min-height: 38px; padding: 6px 12px; font-size: 10px; }
+
+/* Bigger instance card buttons on mobile */
+@media (max-width: 700px) {
+  .inst-actions .inst-rnd,
+  .inst-actions .inst-remove,
+  .inst-actions .inst-vis-btn,
+  .inst-actions .inst-solo-btn,
+  .inst-actions .inst-copy-btn { min-width: 32px; min-height: 32px; }
+
+  .inst-shape-toggle { min-height: 42px; font-size: 11px; }
+  .lock-btn { min-height: 32px; min-width: 32px; font-size: 10px; padding: 4px 6px; }
+  .lock-lbl { font-size: 11px; }
+
+  .amp-split-bar { height: 28px; }
+  .phases-dial-wrap { max-width: 260px; margin: 0 auto 6px; }
+  .ratio-pad { min-height: 140px; }
+  .ratio-pad-dot { width: 10px; height: 10px; border-width: 2px; }
+  .ratio-pad-cursor { width: 14px; height: 14px; }
+}
+
+/* ── WEIRD / RESET in drawer ───────────────────────── */
+#m-weird-btn {
+  width: 100%; padding: 12px; margin-bottom: 8px;
+  border: 2px solid var(--black); background: #ff69b4;
+  color: var(--black); font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+  cursor: pointer; touch-action: manipulation;
+}
+#m-reset-btn {
+  width: 100%; padding: 12px;
+  border: 2px solid var(--black); background: var(--white);
+  color: var(--black); font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+  cursor: pointer; touch-action: manipulation;
+}
+.m-seed-row {
+  display: flex; align-items: center; gap: 4px; margin-bottom: 10px;
+}
+.m-seed-row .seed-input { flex: 1; min-width: 0; }
+
+/* ── RESPONSIVE LAYOUT ─────────────────────────────── */
+@media (max-width: 700px) {
+  .top-header  { display: none !important; }
+  .app { padding-top: 46px; }
+  .sidebar     { display: none !important; }
+  .mobile-header { display: flex !important; }
+  .mobile-nav    { display: flex !important; }
+  .mobile-drawer { display: flex !important; }
+
+  .app { height: 100dvh; }
+  .body-row { flex: 1; overflow: hidden; }
+  .main {
+    flex: 1; width: 100%;
+    padding: 6px 6px 60px;
+  }
+  .canvas-meta { font-size: 9px; letter-spacing: .02em; }
+}
+
 </style>
 </head>
 <body>
@@ -2240,5 +2474,302 @@ window.addEventListener('load',()=>{
   updateUndoRedoBtns();
 });
 </script>
+
+<!-- ═══ MOBILE HEADER ════════════════════════════════ -->
+<div class="mobile-header" id="mobile-header">
+  <h1>HARMONOGRAPH</h1>
+  <div style="display:flex;align-items:center;gap:4px;">
+    <button class="m-hdr-btn" onclick="undo()" id="m-btn-undo">← Undo</button>
+    <button class="m-hdr-btn" onclick="redo()" id="m-btn-redo">Redo →</button>
+    <span class="m-hdr-sep"></span>
+    <button class="m-hdr-btn y" onclick="exportSVG()" id="m-btn-svg">↓ SVG</button>
+  </div>
+</div>
+
+<!-- ═══ MOBILE BOTTOM NAV ════════════════════════════ -->
+<nav class="mobile-nav" id="mobile-nav">
+  <button class="mobile-nav-btn" id="mnav-passes" onclick="mobileNavTap('passes')">
+    <span class="nav-icon">✏</span>Passes
+  </button>
+  <button class="mobile-nav-btn" id="mnav-paper" onclick="mobileNavTap('paper')">
+    <span class="nav-icon">◻</span>Paper
+  </button>
+  <button class="mobile-nav-btn" id="mnav-global" onclick="mobileNavTap('global')">
+    <span class="nav-icon">⚙</span>Global
+  </button>
+  <button class="mobile-nav-btn y-btn" onclick="shareURL()">
+    <span class="nav-icon">⬡</span>Share
+  </button>
+</nav>
+
+<!-- ═══ MOBILE DRAWER ════════════════════════════════ -->
+<div class="mobile-drawer" id="mobile-drawer">
+  <div class="drawer-handle-wrap" id="drawer-handle" ontouchstart="drawerTouchStart(event)" ontouchmove="drawerTouchMove(event)" ontouchend="drawerTouchEnd(event)">
+    <div class="drawer-handle"></div>
+  </div>
+
+  <!-- PASSES panel -->
+  <div class="drawer-tabs" id="drawer-tabs-passes" style="display:none;">
+    <!-- no sub-tabs for passes — it just shows the instances list -->
+  </div>
+
+  <div class="drawer-content" id="drawer-content">
+
+    <!-- ── PASSES ── -->
+    <div class="drawer-panel active" id="dpanel-passes">
+      <div id="m-instances-list"></div>
+      <button class="add-inst-btn" onclick="addInstance()">+ Add pen pass</button>
+    </div>
+
+    <!-- ── PAPER ── -->
+    <div class="drawer-panel" id="dpanel-paper">
+      <div class="ctrl">
+        <div class="ctrl-head" style="margin-bottom:4px;"><span class="ctrl-label">Paper Size</span></div>
+        <select id="m-paperSize" onchange="onMobilePaperChange()">
+          <option value="A3L">A3 Landscape (420 × 297 mm)</option>
+          <option value="A3P">A3 Portrait (297 × 420 mm)</option>
+          <option value="A4L">A4 Landscape (297 × 210 mm)</option>
+          <option value="A4P" selected>A4 Portrait (210 × 297 mm)</option>
+          <option value="A5L">A5 Landscape (210 × 148 mm)</option>
+          <option value="A5P">A5 Portrait (148 × 210 mm)</option>
+          <option value="LTL">Letter Landscape (279 × 216 mm)</option>
+          <option value="LTP">Letter Portrait (216 × 279 mm)</option>
+          <option value="SQS">Square 200 × 200 mm</option>
+          <option value="SQL">Square 300 × 300 mm</option>
+        </select>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:10px;">
+        <div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:6px;">Background</div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div id="m-bg-swatch" style="width:26px;height:26px;border:2px solid #000;cursor:pointer;background:#f5f4f0;" onclick="document.getElementById('m-colBg').click()"></div>
+            <span style="font-family:'Courier New',monospace;font-size:12px;color:var(--mid);" id="m-bg-hex">#f5f4f0</span>
+            <input type="color" id="m-colBg" value="#f5f4f0" onchange="onMobileBgChange()" style="width:0;height:0;opacity:0;position:absolute;pointer-events:none;">
+          </div>
+        </div>
+        <div style="flex:1;">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
+            <span style="font-size:13px;font-weight:700;">Margin</span>
+            <span style="font-family:'Courier New',monospace;font-size:13px;color:var(--mid);"><span id="m-v-margin">15</span> mm</span>
+          </div>
+          <input type="range" id="m-margin" min="0" max="60" step="1" value="15" oninput="onMobileMarginChange()">
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="hdr-btn" onclick="exportPresetJSON()" style="flex:1;min-height:42px;font-size:11px;">↓ Export JSON</button>
+        <label class="hdr-btn hdr-label" style="flex:1;min-height:42px;font-size:11px;justify-content:center;cursor:pointer;">↑ Import JSON<input type="file" accept=".json" style="display:none" onchange="importPresetJSON(this)"></label>
+      </div>
+    </div>
+
+    <!-- ── GLOBAL ── -->
+    <div class="drawer-panel" id="dpanel-global">
+      <div class="ctrl">
+        <div class="ctrl-head" style="margin-bottom:4px;"><span class="ctrl-label">Seed</span></div>
+        <div class="m-seed-row">
+          <button class="btn-sm" onclick="stepSeed(-1)" style="min-height:40px;min-width:40px;">←</button>
+          <input type="number" id="m-seed-input" class="seed-input" style="flex:1;">
+          <button class="btn-sm" onclick="stepSeed(1)" style="min-height:40px;min-width:40px;">→</button>
+          <button class="btn-sm" onclick="rndSeed()" style="min-height:40px;min-width:40px;">⟳</button>
+        </div>
+      </div>
+      <button id="m-weird-btn" onclick="slotMachine()">Let's get weird...</button>
+      <button id="m-reset-btn" onclick="resetDefaults()">Reset Defaults</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ═══ MOBILE UI LOGIC ═══════════════════════════════════════════════════
+
+let mActiveNav = null; // 'passes' | 'paper' | 'global' | null
+
+function mobileNavTap(name) {
+  const drawer = document.getElementById('mobile-drawer');
+  if (mActiveNav === name) {
+    // same button — close drawer
+    drawer.classList.remove('open');
+    mActiveNav = null;
+    document.querySelectorAll('.mobile-nav-btn').forEach(b => b.classList.remove('active'));
+    return;
+  }
+  // Switch panel
+  mActiveNav = name;
+  document.querySelectorAll('.mobile-nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('mnav-' + name).classList.add('active');
+
+  // Show correct drawer panel
+  document.querySelectorAll('.drawer-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('dpanel-' + name).classList.add('active');
+
+  drawer.classList.add('open');
+
+  // Sync instances list when passes panel opens
+  if (name === 'passes') syncMobileInstancesList();
+}
+
+function syncMobileInstancesList() {
+  // Mirror the desktop instances list into the mobile drawer
+  const src = document.getElementById('instances-list');
+  const dst = document.getElementById('m-instances-list');
+  if (src && dst) {
+    dst.innerHTML = src.innerHTML;
+    // Re-bind all onclick handlers by cloning node (innerHTML preserved callbacks via string)
+    // The instances-list HTML uses inline event handlers so they work after innerHTML copy
+  }
+}
+
+// Mirror paper controls to/from desktop equivalents
+function onMobilePaperChange() {
+  const v = document.getElementById('m-paperSize').value;
+  document.getElementById('paperSize').value = v;
+  onPaperChange();
+}
+function onMobileMarginChange() {
+  const v = document.getElementById('m-margin').value;
+  document.getElementById('margin').value = v;
+  document.getElementById('m-v-margin').textContent = v;
+  onMarginChange();
+}
+function onMobileBgChange() {
+  const v = document.getElementById('m-colBg').value;
+  document.getElementById('colBg').value = v;
+  document.getElementById('m-bg-swatch').style.background = v;
+  document.getElementById('m-bg-hex').textContent = v;
+  onBgChange();
+}
+
+// Keep mobile paper UI in sync when desktop changes
+const _origUpdatePaperUI = window.updatePaperUI;
+
+// ── Drawer drag-to-resize ────────────────────────────────────────────────────
+let _dTouchY0 = null;
+let _dStartH = null;
+const DRAWER_MIN_H = 80;
+const DRAWER_MAX_H_VH = 80; // % of vh
+
+function drawerTouchStart(e) {
+  _dTouchY0 = e.touches[0].clientY;
+  const drawer = document.getElementById('mobile-drawer');
+  _dStartH = drawer.getBoundingClientRect().height;
+}
+function drawerTouchMove(e) {
+  if (_dTouchY0 === null) return;
+  e.preventDefault();
+  const dy = _dTouchY0 - e.touches[0].clientY; // positive = dragging up = taller
+  const maxH = window.innerHeight * DRAWER_MAX_H_VH / 100;
+  const newH = Math.min(maxH, Math.max(DRAWER_MIN_H, _dStartH + dy));
+  document.getElementById('mobile-drawer').style.maxHeight = newH + 'px';
+}
+function drawerTouchEnd() {
+  const drawer = document.getElementById('mobile-drawer');
+  const h = drawer.getBoundingClientRect().height;
+  if (h < 100) {
+    // Snap closed
+    drawer.classList.remove('open');
+    mActiveNav = null;
+    document.querySelectorAll('.mobile-nav-btn').forEach(b => b.classList.remove('active'));
+  }
+  _dTouchY0 = null;
+}
+
+// ── Canvas touch → overlay mouse event bridging ──────────────────────────────
+(function() {
+  function touchToMouse(type, touch, target) {
+    const evt = new MouseEvent(type, {
+      bubbles: true, cancelable: true, view: window,
+      clientX: touch.clientX, clientY: touch.clientY,
+      button: 0, buttons: type === 'mousedown' || type === 'mousemove' ? 1 : 0
+    });
+    target.dispatchEvent(evt);
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const ov = document.getElementById('paper-overlay');
+    if (!ov) return;
+
+    let _touching = false;
+
+    ov.addEventListener('touchstart', e => {
+      e.preventDefault();
+      _touching = true;
+      touchToMouse('mousedown', e.touches[0], ov);
+    }, { passive: false });
+
+    ov.addEventListener('touchmove', e => {
+      e.preventDefault();
+      if (!_touching) return;
+      touchToMouse('mousemove', e.touches[0], ov);
+    }, { passive: false });
+
+    ov.addEventListener('touchend', e => {
+      e.preventDefault();
+      _touching = false;
+      const t = e.changedTouches[0];
+      touchToMouse('mouseup', t, ov);
+    }, { passive: false });
+  });
+})();
+
+// ── Keep mobile seed input in sync ──────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  const deskSeed = document.getElementById('seed-input');
+  const mobSeed  = document.getElementById('m-seed-input');
+  if (deskSeed && mobSeed) {
+    mobSeed.value = deskSeed.value;
+    mobSeed.addEventListener('change', function() {
+      deskSeed.value = this.value;
+      P.seed = Math.max(1, parseInt(this.value) || 1);
+      redraw();
+    });
+    // Watch desktop for changes
+    const obs = new MutationObserver(() => { mobSeed.value = deskSeed.value; });
+    obs.observe(deskSeed, { attributes: true, attributeFilter: ['value'] });
+  }
+
+  // Sync paper size
+  const deskPaper = document.getElementById('paperSize');
+  const mobPaper  = document.getElementById('m-paperSize');
+  if (deskPaper && mobPaper) {
+    mobPaper.value = deskPaper.value;
+  }
+
+  // Sync undo/redo buttons
+  const origUpdateUndoRedoBtns = window.updateUndoRedoBtns;
+  window.updateUndoRedoBtns = function() {
+    if (origUpdateUndoRedoBtns) origUpdateUndoRedoBtns();
+    const mu = document.getElementById('m-btn-undo');
+    const mr = document.getElementById('m-btn-redo');
+    const du = document.getElementById('btn-undo');
+    const dr = document.getElementById('btn-redo');
+    if (mu && du) mu.disabled = du.disabled;
+    if (mr && dr) mr.disabled = dr.disabled;
+  };
+
+  // Sync SVG button enabled state
+  const origSetExportEnabled = window.setExportEnabled;
+  window.setExportEnabled = function(on) {
+    if (origSetExportEnabled) origSetExportEnabled(on);
+    const mb = document.getElementById('m-btn-svg');
+    if (mb) mb.disabled = !on;
+  };
+
+  // Patch buildInstancesUI to also update mobile drawer when passes panel is open
+  const origBuildInstancesUI = window.buildInstancesUI;
+  window.buildInstancesUI = function() {
+    if (origBuildInstancesUI) origBuildInstancesUI();
+    if (mActiveNav === 'passes') syncMobileInstancesList();
+  };
+});
+
+// ── Prevent scroll when touching canvas ─────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  const cw = document.getElementById('canvas-wrap');
+  if (cw) {
+    cw.addEventListener('touchstart', e => { if (e.target.id === 'paper-overlay') e.preventDefault(); }, { passive: false });
+  }
+});
+</script>
+
 </body>
 </html>
